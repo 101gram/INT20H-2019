@@ -2,6 +2,11 @@
     "compilerOptions": {
         "baseUrl": ".",
         "rootDir": ".",
+        "paths": {
+            "*": [ "../common/ambient-declarations/*", "*" ],
+            "@modules/*": ["modules/*"],
+            "@app/*": ["./*"]
+        },
         /* Basic Options */
         "outDir": "./../../build",
         "target": "esnext",
@@ -9,9 +14,6 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "typeRoots": [
-            "node_modules/@types", "ambient-declarations"
-        ],
         "sourceMap":      false, /* Disable source map as import path mapper breaks it. */
         "declaration":    false, /* Generates corresponding '.d.ts' file. */
         "declarationMap": false, /* Generates a sourcemap for each corresponding '.d.ts' file. */

@@ -2,7 +2,8 @@
     "defaultSeverity": "error",
     "jsRules": {
     },
-    "rules": {
+    "extends": ["tslint-react"], // npm i tslint-react
+    "rules": {              
         "no-var-keyword": true,
         "no-arg": true,
         "triple-equals": true,
@@ -29,7 +30,10 @@
         "no-floating-promises": true,
         "no-inferred-empty-object-type": true,
         "strict-type-predicates": true,
-        "restrict-plus-operands": true
+        "restrict-plus-operands": true,
+        "jsx-curly-spacing": false,
+        "jsx-boolean-value": false,
+        "jsx-no-multiline-js": false 
     },
     "rulesDirectory": []
 }

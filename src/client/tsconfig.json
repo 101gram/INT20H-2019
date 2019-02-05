@@ -3,23 +3,22 @@
         "outDir": "./../dist/",
         "jsx": "react",
         "target": "es5",
-        "module": "es2015",
-        // "moduleResolution": "node",
-        "typeRoots": [
-            "declarations", "node_modules/@types"
-        ],
+        "lib": ["esnext", "dom"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "rootDir": "..",
         "baseUrl": ".",
         "paths": {
             "@reducers/*":     [ "reducers/*"     ],
             "@actions/*":      [ "actions/*"      ],
             "@components/*":   [ "components/*"   ],
             "@modules/*":      [ "modules/*"      ],
-            "@app/*":          [ "./*"            ]
+            "@theme/*":        [ "theme/*"        ],
+            "@app/*":          [ "./*"            ],
+
+            "*": ["./../common/ambient-declarations/*", "*"]
         },
-        // "sourceMap":       true,
         "noImplicitAny":   true,
-        // "declaration":    false, /* Generates corresponding '.d.ts' file. */
-        // "declarationMap": false, /* Generates a sourcemap for each corresponding '.d.ts' file. */
         "experimentalDecorators":     true,
         "strict":                     true,
         "noUnusedLocals":             true,
@@ -30,7 +29,6 @@
         "skipLibCheck": true,
         "checkJs": false
     },
-    // "files": [ "index.tsx" ],
     "include": [
         "./**/*"
     ]

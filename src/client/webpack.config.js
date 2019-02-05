@@ -5,7 +5,6 @@ const path = require('path'),
   MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-    
     entry: "./src/client/index.tsx",
     output: {
         filename: "bundle.js",
@@ -17,7 +16,14 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json"],
+        alias: { 
+            "@components": path.resolve(__dirname, "components"),
+            "@reducers":   path.resolve(__dirname, "reducers"),
+            "@actions":    path.resolve(__dirname, "actions"),
+            "@theme":      path.resolve(__dirname, "theme"),
+            "@services":   path.resolve(__dirname, "modules")
+        },
     },
 
     module: {

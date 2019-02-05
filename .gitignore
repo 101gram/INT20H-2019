@@ -78,3 +78,6 @@ typings/
 
 # webpack dist
 dist/
+
+#tsc
+build/

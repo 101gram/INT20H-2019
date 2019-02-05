@@ -1,0 +1,37 @@
+{
+    "compilerOptions": {
+        "outDir": "./../dist/",
+        "jsx": "react",
+        "target": "es5",
+        "module": "es2015",
+        // "moduleResolution": "node",
+        "typeRoots": [
+            "declarations", "node_modules/@types"
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "@reducers/*":     [ "reducers/*"     ],
+            "@actions/*":      [ "actions/*"      ],
+            "@components/*":   [ "components/*"   ],
+            "@modules/*":      [ "modules/*"      ],
+            "@app/*":          [ "./*"            ]
+        },
+        // "sourceMap":       true,
+        "noImplicitAny":   true,
+        // "declaration":    false, /* Generates corresponding '.d.ts' file. */
+        // "declarationMap": false, /* Generates a sourcemap for each corresponding '.d.ts' file. */
+        "experimentalDecorators":     true,
+        "strict":                     true,
+        "noUnusedLocals":             true,
+        "noUnusedParameters":         true,
+        "noImplicitThis":             true,
+        "noImplicitReturns":          true,
+        "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
+        "checkJs": false
+    },
+    // "files": [ "index.tsx" ],
+    "include": [
+        "./**/*"
+    ]
+}

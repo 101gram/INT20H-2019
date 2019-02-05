@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": ".",
+        /* Basic Options */
+        "outDir": "./../../build",
+        "target": "esnext",
+        "lib": ["esnext"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "typeRoots": [
+            "node_modules/@types", "ambient-declarations"
+        ],
+        "sourceMap":      false, /* Disable source map as import path mapper breaks it. */
+        "declaration":    false, /* Generates corresponding '.d.ts' file. */
+        "declarationMap": false, /* Generates a sourcemap for each corresponding '.d.ts' file. */
+        "experimentalDecorators":     true,
+        "strict":                     true,
+        "noUnusedLocals":             true,
+        "noUnusedParameters":         true,
+        "noImplicitAny":              true,
+        "noImplicitThis":             true,
+        "noImplicitReturns":          true,
+        "noFallthroughCasesInSwitch": true,
+    },
+    "files": ["index.ts"],
+    "include": [
+        "**/*"
+    ],
+    "exclude": [
+        "node_modules/**/*", "build"
+    ]
+}

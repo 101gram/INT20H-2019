@@ -12,7 +12,8 @@ const PORT = 3000;
 app.listen(PORT, () => console.log('Server started at port:', PORT));
 
 app.use(express.static('./dist/'));
-app.use(express.static('./assets/'));
+app.use(express.static('./node_modules/react/umd/'));
+app.use(express.static('./node_modules/react-dom/umd/'));
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/index.html'));

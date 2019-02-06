@@ -8,6 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
+import Test from '@containers/test';
 
 const styles = ({ palette, spacing, breakpoints}: Theme) => createStyles({
     icon: {
@@ -64,7 +65,7 @@ class Main extends React.Component<Props> {
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
                             Album layout
                         </Typography>
-                        <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                        {/* <Typography variant="h6" align="center" color="textSecondary" paragraph>
                             Something short and leading about the collection below—its contents, the creator, etc.
                             Make it short and sweet, but not too short so folks don&apos;t simply skip over it
                             entirely.
@@ -82,7 +83,8 @@ class Main extends React.Component<Props> {
                                     </Button>
                                 </Grid>
                             </Grid>
-                        </div>
+                        </div> */}
+                        <Test classes={classes}/>
                     </div>
                 </div>
                 <div className={classNames(classes.layout, classes.cardGrid)}>

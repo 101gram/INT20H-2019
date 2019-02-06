@@ -27,6 +27,7 @@ export interface Props extends WithStyles<typeof styles> {
 class Header extends React.Component<Props> {
     render() {
         const { classes } = this.props;
+        //const siteName = this.context;
         return (
             <AppBar position="static">
                 <Toolbar>
@@ -34,7 +35,7 @@ class Header extends React.Component<Props> {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
-                        News
+                        {"/"}
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>

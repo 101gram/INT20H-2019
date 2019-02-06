@@ -1,22 +1,22 @@
 import * as Debug from '@modules/debug';
-import Express from 'express';
+import Express = require('express');
 import * as Path from 'path';
 import * as Flickr from 'flickrapi';
 import * as Config from '@app/config';
 
 Flickr.authenticate({
-    api_key: Config.FlickrApiKey,
-    secret:  Config.FlickrApiScret
+    api_key:             Config.Flickr.ApiKey,
+    secret:              Config.Flickr.ApiSecret,
+    user_id:             Config.Flickr.UserId,
+    access_token:        Config.Flickr.AccessToken,
+    access_token_secret: Config.Flickr.AccessTokenSecret   
 }, (error, flickr) => {   
     if (error) {
         Debug.shutdown(error, 'Falield to authenticate on Flickr');
     }
-    
     const app = Express(); 
 
-    app.configure(function() {
-        flickr!.proxy(app, "/api/proxy/flickr");
-    });
+    flickr!.proxy(app, "/api/proxy/flickr");
 
     app.use(Express.static('./dist/'));
     app.use(Express.static('./node_modules/react/umd/'));
@@ -27,7 +27,7 @@ Flickr.authenticate({
     });
 
     app.use(((err, _req, res, _next) => {
-        console.error(err.stack);
+        Debug.Log.error(err);
         return res.status(500).end(`Internal srever error: ${err.message}`);
     }) as Express.ErrorRequestHandler);
 

@@ -1,8 +1,9 @@
 declare module 'flickrapi' {
     import { Maybe } from 'vee-type-safe';
     import * as Express from 'express';
+    export type Callback<TResult> = (err: unknown, result: Maybe<TResult>) => void;
 
-    export interface FlikrProxy {
+    export interface FlickrProxy {
         proxy(app: Express.Application, path: string): void;
     }
 
@@ -14,12 +15,10 @@ declare module 'flickrapi' {
     
     interface FlickrAuthOptions {
         api_key:  string;             // "your api key from flickr",
-        secret:   string;             // "your api key secret from flickr",
+        secret?:  string;             // "your api key secret from flickr",
         user_id?: string;             // negotiated through first-time authenticate() call
         access_token?: string;        // negotiated through first-time authenticate() call
         access_token_secret?: string; // negotiated through first-time authenticate() call
         // requestOptions: "object containing any value accepted by request.defaults()" optional
     }
-
-    
 }

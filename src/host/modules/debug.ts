@@ -17,7 +17,7 @@ export namespace Log {
      */
     export function info(payload: unknown, description?: string) {
         logCurrentTime();
-        process.stdout.write(Colors.blue(`Info: ${description || ''} `));
+        console.log(Colors.blue(`Info: ${description || ''} `));
         console.dir(payload);
     }
     /**
@@ -31,7 +31,7 @@ export namespace Log {
     export function error(payload: unknown, description?: string) {
         debugger;
         logCurrentTime();
-        process.stdout.write(Colors.red(`Error: ${description || ''} `));
+        console.log(Colors.red(`Error: ${description || ''} `));
         if (payload instanceof Error) {
             console.error(payload);
         } else {
@@ -48,7 +48,7 @@ export namespace Log {
      */
     export function warning(payload: unknown, description?: string) {
         logCurrentTime();
-        process.stdout.write(Colors.yellow(`Warning: ${description || ''} `));
+        console.log(Colors.yellow(`Warning: ${description || ''} `));
         console.dir(payload);
     }
 }

@@ -9,9 +9,13 @@
         "rootDir": "..",
         "baseUrl": ".",
         "paths": {
+            "@common/*":       [ "../common/*"    ],
             "@reducers/*":     [ "reducers/*"     ],
             "@actions/*":      [ "actions/*"      ],
             "@components/*":   [ "components/*"   ],
+            "@services/*":     [ "services/*"     ],
+            "@configs/*":      [ "configs/*"      ],
+            "@containers/*":   [ "containers/*"   ],
             "@modules/*":      [ "modules/*"      ],
             "@theme/*":        [ "theme/*"        ],
             "@app/*":          [ "./*"            ],
@@ -19,6 +23,7 @@
             "*": ["./../common/ambient-declarations/*", "*"]
         },
         "noImplicitAny":   true,
+        //"esmoduleInterop": true,
         "experimentalDecorators":     true,
         "strict":                     true,
         "noUnusedLocals":             true,

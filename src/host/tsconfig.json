@@ -2,10 +2,13 @@
     "compilerOptions": {
         "baseUrl": ".",
         "rootDir": ".",
+        "typeRoots": [
+            "../common/ambient-declarations"
+        ],
         "paths": {
-            "*": [ "../common/ambient-declarations/*", "*" ],
-            "@modules/*": ["modules/*"],
-            "@app/*": ["./*"]
+            "@common/*":  [ "../common/*" ],
+            "@modules/*": [ "modules/*"   ],
+            "@app/*":     [ "./*"         ]
         },
         /* Basic Options */
         "outDir": "./../../build",

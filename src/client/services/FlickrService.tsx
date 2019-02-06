@@ -1,5 +1,5 @@
-import { FlickrAPI } from 'flickrapi/browser/flickrapi';
-import * as Config from '@app/configs/config';
+import 'flickrapi/browser/flickrapi';
+// import * as Config from '@configs/config';
 
 export interface FetchPhotoesRequest {
     /**
@@ -21,24 +21,24 @@ export interface FetchPhotoesResponse {
 export class FlickrService {
     // @TODO move to backend
   
-    private flickr = new FlickrAPI({
-        endpoint: Config.Flickr.ProxyEndpoind
-    });
+    // private flickr = new Flickr({
+    //     endpoint: Config.Flickr.ProxyEndpoind
+    // });
     
-    fetchPhotoes(req: FetchPhotoesRequest) {
-        return new Promise((resolve, reject) => {
-            this.flickr.photosets.getPhotos({ 
-                ...req,
-                photoset_id: Config.Flickr.AlbumId,
-                user_id:     Config.Flickr.UserId,
-                media: 'photos'
-            }, (err, res) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(res);
-            });
-        });
-    }
+    // fetchPhotoes(req: FetchPhotoesRequest) {
+    //     return new Promise((resolve, reject) => {
+    //         this.flickr.photosets.getPhotos({ 
+    //             ...req,
+    //             photoset_id: Config.Flickr.AlbumId,
+    //             user_id:     Config.Flickr.UserId,
+    //             media: 'photos'
+    //         }, (err, res) => {
+    //             if (err) {
+    //                 reject(err);
+    //             }
+    //             resolve(res!);
+    //         });
+    //     });
+    // }
 
 }

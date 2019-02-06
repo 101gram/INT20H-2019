@@ -18,11 +18,14 @@ module.exports = {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: { 
+            "@common":     path.resolve(__dirname, "../common"),
             "@components": path.resolve(__dirname, "components"),
             "@reducers":   path.resolve(__dirname, "reducers"),
             "@actions":    path.resolve(__dirname, "actions"),
             "@theme":      path.resolve(__dirname, "theme"),
-            "@services":   path.resolve(__dirname, "modules")
+            "@configs":    path.resolve(__dirname, "configs"),
+            "@containers": path.resolve(__dirname, "containers"),
+            "@services":   path.resolve(__dirname, "services")
         },
     },
 

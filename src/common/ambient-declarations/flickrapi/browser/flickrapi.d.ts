@@ -1,8 +1,10 @@
 declare module 'flickrapi/browser/flickrapi' {
+    import { Maybe } from 'vee-type-safe';
+    export type Callback<TResult> = (err: unknown, result: Maybe<TResult>) => void;
     export interface FlickrAPIOptions {
         endpoint: string;
     }
-    export declare class FlickrAPI {
+    export class Flickr {
         constructor(options: FlickrAPIOptions);
         photos:    Photos.API;
         photosets: Photosets.API;
@@ -27,9 +29,9 @@ declare module 'flickrapi/browser/flickrapi' {
     /**
      * Creates an API object.
      */
-    export function tokenOnly(options: FlickrTokenOnlyOptions): FlickrAPI;
+    export function tokenOnly(options: FlickrTokenOnlyOptions): Flickr;
 
-    export type Callback<TResult> = (err: unknown, result: Maybe<TResult>) => void;
+    
 
     interface FlikrPhoto {
         id:     string;
@@ -128,4 +130,8 @@ declare module 'flickrapi/browser/flickrapi' {
             media: 'all' | 'photos' | 'videos';
         }
     }
+}
+
+declare global {
+    declare const Flickr: typeof import('flickrapi/browser/flickrapi').Flickr;
 }

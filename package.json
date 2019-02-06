@@ -66,6 +66,8 @@
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "flickrapi": "^0.6.0",
+    "form-data": "^2.3.3",
+    "node-fetch": "^2.3.0",
     "tslint": "^5.12.1",
     "tslint-react": "^3.6.0",
     "vee-type-safe": "^3.1.3"

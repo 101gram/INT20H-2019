@@ -9,13 +9,14 @@
             "../common/ambient-declarations"
         ],
         "paths": {
-            "@common/*":  [ "../common/*" ],
+            "@routes/*":  [ "routes/*"    ],
             "@modules/*": [ "modules/*"   ],
-            "@app/*":     [ "./*"         ]
+            "@app/*":     [ "./*"         ],
+            "@common/*":  [ "../common/*" ]
         },
         /* Basic Options */
         "outDir": "./../../build",
-        "target": "esnext",
+        "target": "es2018",
         "lib": ["esnext"],
         "module": "commonjs",
         "moduleResolution": "node",

@@ -6,7 +6,7 @@
     "rules": {              
         "no-var-keyword": true,
         "no-arg": true,
-        "triple-equals": true,
+        "triple-equals": false, // obj == null is valid
         "semicolon": true,
         "adjacent-overload-signatures": true,
         "await-promise": true,

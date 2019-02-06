@@ -12,4 +12,16 @@ const enhancer = composeEnhancers(
 
 const store = createStore(rootReducer, enhancer);
 
+/**
+ *  type for state in web front application
+ *  @param TData - there you can store some date 
+ *  ******************
+ *  hint: errorMassage could be null, if there wasn't any error before
+ */
+export type DefaultState<TData> = {
+    isFetching: boolean,
+    errorMessage: string | null,
+    data: TData;
+};
+
 export default store;

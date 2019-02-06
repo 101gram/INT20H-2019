@@ -3,19 +3,14 @@ import fetch from "node-fetch";
 
 interface Face {
     attributes: {
-        beauty: {
-            female_score: number;
-            male_score:   number;
-        },
         emotion: {
-            saddness: number,
+            saddness:  number,
             neutral:   number,
-            disgust: number,
-            anger:   number,
-            surpise: number,
-            fear:   number,
-            happiness: number,
-            [key: string]: number
+            disgust:   number,
+            anger:     number,
+            surpise:   number,
+            fear:      number,
+            happiness: number
         },
     };
 }
@@ -27,18 +22,16 @@ interface FacePPResponse {
     time_used: number;
 }
 
-class FacePlusPlus {
+export default class FacePlusPlus {
     constructor(private readonly api_key: string, private readonly api_secret: string)
-    {
-
-    }
+    {}
 
     async getFacesEmotions(imageUrl: string){
         const body = new FormData();
         body.append("api_key", this.api_key);
         body.append("api_secret", this.api_secret);
         body.append("image_url", imageUrl);
-        body.append("return_attributes", "beauty,emotion");
+        body.append("return_attributes", "emotion");
         const response = await fetch(
             "https://api-us.faceplusplus.com/facepp/v3/detect",
             {
@@ -50,19 +43,20 @@ class FacePlusPlus {
             throw new Error(response.statusText);
         }
         const jsonResponse = await response.json();
-        const res = jsonResponse as FacePPResponse;
-        const facesArray: Face[] = res.faces;
+        // @TODO check for conformance
+        const facesArray = (jsonResponse as FacePPResponse).faces;
 
-        const emotions : string[] = new Array();
+        const emotions: string[] = [];
     
-        for(const face of facesArray){
-            if(face.attributes){
+        for (const face of facesArray) {
+            if (face.attributes) {
                 let maxvalue = 0;
-                let bestMatchingEmotion: string = "";
-                for(const emotion in face.attributes.emotion){
-                    if(maxvalue < face.attributes.emotion[emotion]){
-                        maxvalue = face.attributes.emotion[emotion];
-                        bestMatchingEmotion = emotion;
+                let bestMatchingEmotion = "";
+                const { attributes: { emotion } } = face; // nu da. tipa y teba eta tema v obj , a obj v drugom obj
+                for (const e in emotion) {
+                    if(maxvalue <  emotion[e as keyof typeof emotion]){
+                        maxvalue = emotion[e as keyof typeof emotion];
+                        bestMatchingEmotion = e;
                     }
                 }
                 emotions.push(bestMatchingEmotion);
@@ -71,5 +65,3 @@ class FacePlusPlus {
         return emotions;
     }
 }
-
-export {FacePlusPlus};

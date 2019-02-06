@@ -4,10 +4,14 @@ Dotenv.load();
 
 export namespace Flickr {
     export const ApiKey            = tryReadEnv('FLICKR_API_KEY');
-    export const ApiSecret         = tryReadEnv('FLICKR_API_SECRET');
-    export const UserId            = tryReadEnv('FLICKR_USER_ID');
-    export const AccessToken       = tryReadEnv('FLICKR_ACCESS_TOKEN');
-    export const AccessTokenSecret = tryReadEnv('FLICKR_ACCESS_TOKEN_SECRET');
+    // export const ApiSecret         = tryReadEnv('FLICKR_API_SECRET');
+    // export const TargetUserId      = tryReadEnv('FLICKR_USER_ID');
+    // export const AccessToken       = tryReadEnv('FLICKR_ACCESS_TOKEN');
+    // export const AccessTokenSecret = tryReadEnv('FLICKR_ACCESS_TOKEN_SECRET');
+
+    export const TargetPhotosetId  = '72157674388093532';
+    export const TargetUserId      = '144522605@N06';
+    export const TargetPhotoTag    = 'int20h';
 }
 
 export namespace FacePP {

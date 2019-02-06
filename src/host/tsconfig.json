@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "rootDir": ".",
+        "rootDirs": [
+            ".",
+            "../common/"
+        ],
         "typeRoots": [
             "../common/ambient-declarations"
         ],
@@ -31,9 +34,10 @@
     },
     "files": ["index.ts"],
     "include": [
-        "**/*"
+        "**/*",
+        "../common/**/*"
     ],
     "exclude": [
-        "node_modules/**/*", "build"
+        "node_modules/**/*", "build", "../common/ambient-declarations/**/*"
     ]
 }

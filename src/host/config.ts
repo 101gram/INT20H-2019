@@ -10,6 +10,11 @@ export namespace Flickr {
     export const AccessTokenSecret = tryReadEnv('FLICKR_ACCESS_TOKEN_SECRET');
 }
 
+export namespace FacePP {
+    export const ApiKey    = tryReadEnv('FACEPP_API_KEY');
+    export const ApiSecret = tryReadEnv('FACEPP_API_SECRET');
+}
+
 export const Port = tryReadEnv('PORT');
 
 

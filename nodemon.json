@@ -1,0 +1,5 @@
+{
+    "watch": "build",
+    "exec": "cd src/host/ && ef-tspm && cd ../../ && node build/host/index.js",
+    "delay": "1500"
+}

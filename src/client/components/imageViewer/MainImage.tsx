@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = () => createStyles({
     card: {
+        height: '100%',
         display: 'flex',
     },
     details: {
@@ -19,9 +20,10 @@ const styles = () => createStyles({
     },
     content: {
         flex: '1 0 auto',
+    // width: '20%'
     },
     cover: {
-        width: 151,
+        width: '80%'
     }
 });
 
@@ -32,9 +34,13 @@ class MediaControlCard extends React.Component<Props>{
         const { classes } = this.props;
         return (
             <Card className={classes.card}>
+                <CardMedia
+                    className={classes.cover}
+                    image="https://static.spin.com/files/140522-jack-white-meg-interview-640x426.jpg"
+                    title="Live from space album cover"
+                />
                 <div className={classes.details}>
-                    <CardContent className={classes.content}>
-                        <Typography variant="h5" color="default">
+                    <CardContent className={classes.content}>    <Typography variant="h5" color="default">
                             Hello World
                         </Typography>
                         <Typography variant="subtitle1" color="textSecondary">
@@ -42,11 +48,6 @@ class MediaControlCard extends React.Component<Props>{
                         </Typography>
                     </CardContent>
                 </div>
-                <CardMedia
-                    className={classes.cover}
-                    image="/static/images/cards/live-from-space.jpg"
-                    title="Live from space album cover"
-                />
             </Card>
         );
     }

@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import * as Vts  from 'vee-type-safe';
-import * as Debug from '@modules/debug';
-import * as Config from '@app/config';
+import * as Vts     from 'vee-type-safe';
+import * as Debug   from '@modules/debug';
+import * as Config  from '@app/config';
 import * as Network from '@modules/network';
 
 interface PaginationParams {
@@ -30,11 +30,11 @@ const FlickrPhotoTD: Vts.TypeDescriptionOf<FlickrPhoto> = {
 };
 
 interface FlickrPhotosetResponse extends FlickrBasicJsonResponse {
-    photoset?: {
+    photoset?: Vts.Maybe<{
         photo: FlickrPhoto[];
         total: number;
         [key: string]: unknown;
-    };
+    }>;
 }
 const FlickrPhotosetsResponseTD: Vts.TypeDescriptionOf<FlickrPhotosetResponse> = {
     photoset: Vts.optional({
@@ -67,6 +67,7 @@ export class FlickrAPI {
     static flickrPhotoToUrl({ farm, server, secret, id }: FlickrPhoto) {
         return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
     }
+    
 
     private static assertGoodPaginationParams(opts: PaginationParams) {
         Debug.assert.matches(opts.per_page, Vts.isIntegerWithinRange(1, 500));
@@ -87,7 +88,24 @@ export class FlickrAPI {
             }
         });
     }
+    // @TODO
+    async fetchPhotosByTagAndFromPhotoset(paginationParams: PaginationParams) {
+        return this.fetchPhotosByTag(paginationParams);
+    }
 
+
+
+    /**
+     * 
+     * Fetches photos from FlickrAPI server, paginated according to `opts`.
+     * 
+     * @param paginationParams Pagination parameters.
+     * 
+     * @remarks 
+     * `opts.per_page` must be inside the range `[1, 500]`
+     * 
+     * @throws Error if network error occurs, or FlickrAPI responds with 'fail'
+     */
     async fetchPhotosByTag(paginationParams: PaginationParams) {
         FlickrAPI.assertGoodPaginationParams(paginationParams);
         const response = await this.fetchJson<FlickrPhotosSearchResponse>({
@@ -122,8 +140,8 @@ export class FlickrAPI {
     }
 
     /**
-     * Returns { total: number, photos: FlickrPhoto[] }
-     * Fetces photos from FlickrAPI server, paginated accrodign to `opts`
+     *
+     * Fetches photos from FlickrAPI server, paginated according to `opts`.
      * 
      * @param paginationParams Pagination parameters.
      * 

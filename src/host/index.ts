@@ -10,7 +10,7 @@ Express()
 //app.use(BodyParser.json());
 
 .use(Express.static('./dist/'))
-.use('/api/v1/', apiRouter)
+.use('/api/v1', apiRouter)
 
 .get('*', (_req, res) => {
     res.sendFile(Path.join(__dirname,`/../../dist/index.html`));

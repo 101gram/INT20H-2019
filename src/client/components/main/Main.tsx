@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 // import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
-// import Card from '@material-ui/core/Card';
+//import Card from '@material-ui/core/Card';
 // import CardActions from '@material-ui/core/CardActions';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
-import Test from '@containers/test';
-// import CardImage from '@components/card/MainImage';
+// import Test from '@containers/test';
 import ImageCard from '@components/imageCard/Card';
-// import MediaControlCard from '@components/imageViewer/MainImage';
+ import MediaControlCard from '@components/imageViewer/MainImage';
 
 const styles = ({ palette, spacing, breakpoints}: Theme) => createStyles({
     icon: {
@@ -21,10 +20,10 @@ const styles = ({ palette, spacing, breakpoints}: Theme) => createStyles({
         backgroundColor: palette.background.paper,
     },
     heroContent: {
-        //color: "#000",
-        maxWidth: 600,
-        margin: '0 auto',
-        padding: `${spacing.unit * 8}px 0 ${spacing.unit * 6}px`,
+        maxWidth: 1000,
+        height: 600,
+        margin: `${spacing.unit * 6}px auto`,
+        //margin: `${spacing.unit * 8}px auto ${spacing.unit * 6}px`,
     },
     heroButtons: {
         marginTop: spacing.unit * 4,
@@ -161,10 +160,11 @@ class Main extends React.Component<Props> {
             <main>
                 <div className={classes.heroUnit}>
                     <div className={classes.heroContent}>
-                        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                        <MediaControlCard />
+                        {/* <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
                             Album layout
                         </Typography>
-                        {/* <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                        <Typography variant="h6" align="center" color="textSecondary" paragraph>
                             Something short and leading about the collection below—its contents, the creator, etc.
                             Make it short and sweet, but not too short so folks don&apos;t simply skip over it
                             entirely.
@@ -183,7 +183,7 @@ class Main extends React.Component<Props> {
                                 </Grid>
                             </Grid>
                         </div> */}
-                        <Test classes={classes}/>
+                        {/* <Test classes={classes}/> */}
                     </div>
                 </div>
                 <div className={classNames(classes.layout, classes.cardGrid)}>

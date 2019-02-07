@@ -4,6 +4,7 @@ Dotenv.load();
 
 export namespace Flickr {
     export const ApiKey            = tryReadEnv('FLICKR_API_KEY');
+    // unnecessary
     // export const ApiSecret         = tryReadEnv('FLICKR_API_SECRET');
     // export const TargetUserId      = tryReadEnv('FLICKR_USER_ID');
     // export const AccessToken       = tryReadEnv('FLICKR_ACCESS_TOKEN');

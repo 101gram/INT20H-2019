@@ -1,17 +1,20 @@
 import _        from 'lodash';
 import * as Vts from 'vee-type-safe';
 import * as Network from '@modules/network';
-import { EmotionsPhotos } from '@common/interfaces';
+import { EP } from '@common/interfaces';
 
 interface Face {
     attributes?: Vts.Maybe<{
-        emotion: Vts.BasicObjectMap<EmotionsPhotos.Emotion, number>
+        emotion: Vts.BasicObjectMap<EP.Emotion, number>
     }>;
 }
 
 const FaceTD: Vts.TypeDescriptionOf<Face> = {
     attributes: Vts.optional({
-        emotion: Vts.isOneOf(EmotionsPhotos.PossibleEmotions)
+        emotion: EP.PossibleEmotions.reduce((obj, emotion) => {
+            obj[emotion] = Vts.isNumberWithinRange(0, 100);
+            return obj;
+        }, {} as Vts.BasicObjectMap<EP.Emotion, Vts.TypePredicate>)
     })
 };
 
@@ -45,12 +48,13 @@ export class FaceppAPI {
             },
             jsonTypedescr: FaceappResponseTD
         });
-        const emotions: string[] = [];
+        const emotions: EP.Emotion[] = [];
         for (const { attributes } of faces) {
             if (attributes != null) {
                 const { emotion } = attributes;
                 emotions.push(_.maxBy(
-                    _.keys(emotion), key => emotion[key as keyof typeof emotion]
+                    _.keys(emotion) as (keyof typeof emotion)[], 
+                    key => emotion[key as keyof typeof emotion]
                 )!);
             }
         }

@@ -3,7 +3,7 @@ import * as MathJS from 'mathjs';
 import * as Vts    from 'vee-type-safe';
 import * as Utils  from '@modules/utils';
 import { IntegerRange  } from '@modules/integer-range';
-import { assert        } from '@modules/debug';
+import { assert, Log   } from '@modules/debug';
 
 /**
  * Returns a random item from the given array. 
@@ -66,4 +66,11 @@ export function * pickRandomItems<T>(arr: T[], times: number[]) {
         }
         yield randomValue;
     }
+}
+
+export async function measurePerformance(routine: () => Promise<void>, functionName: string) {
+    const before = Date.now();
+    await routine();
+    const after = Date.now();
+    Log.info(`${functionName} was running ${after - before} ms`);
 }

@@ -1,43 +1,47 @@
 import Express from 'express';
-import { FlickrAPI } from '@modules/flickr-api';
-//import { FacePlusPlus } from '@modules/fpp-api';
-import * as Config from '@app/config';
 import * as Vts    from 'vee-type-safe';
 import * as VtsEx  from 'vee-type-safe/express';
-import { EmotionsPhotos } from '@common/interfaces';
+import { EP    } from '@common/interfaces';
+import { Photo } from '@models/photo';
 
-
-const flickrAPI = new FlickrAPI(Config.Flickr.ApiKey);
-//const faceppAPI = new FacePlusPlus(Config.FacePP.ApiKey, Config.FacePP.ApiSecret);
 
 interface EmotionsPhotosQueryParams {
     // stringified numbers
-    page:    string;  
+    offset:  string;  
     limit:   string;
-
-    emotion: EmotionsPhotos.Emotion;
+    emotion: string;
 }
 const EmotionsPhotosQueryParamsTD: Vts.TypeDescriptionOf<EmotionsPhotosQueryParams> = {
-    page:    'string',
+    offset:  'string',
     limit:   'string',
-    emotion: Vts.isOneOf(EmotionsPhotos.PossibleEmotions)
+    emotion: 'string'
 };
 
 export const router = Express.Router()
 .get('/emotions/photos', 
     VtsEx.ensureTypeMatch(VtsEx.ReqQuery, EmotionsPhotosQueryParamsTD),
     async ({ query }: VtsEx.ReqQuery<EmotionsPhotosQueryParams>, res) => {
-        const page  = parseInt(query.page, 10);
-        const limit = parseInt(query.limit, 10);
-        Vts.ensureMatch(page, Vts.isPositiveInteger);
-        Vts.ensureMatch(limit, Vts.isPositiveInteger);
-        const { photos, total } = await flickrAPI.fetchPhotosByTagAndFromPhotoset({
-            page,
-            per_page: limit
-        });
-        const jsonResponse: EmotionsPhotos.Response = {
-            total,
-            photos: photos.map(FlickrAPI.flickrPhotoToUrl)
+        const offset = parseInt(query.offset, 10);
+        const limit  = parseInt(query.limit, 10);
+        Vts.ensureMatch(offset, Vts.isZeroOrPositiveInteger);
+        Vts.ensureMatch(limit,  Vts.isZeroOrPositiveInteger);
+        const emotions = query.emotion.split(',');
+        Vts.ensureMatch(emotions, [Vts.isOneOf(EP.PossibleEmotions)]);
+
+        const page = await Photo.paginate(
+            { emotions: { $elemMatch: { $in: emotions } } },
+            { 
+                offset, 
+                limit, 
+                lean: true, 
+                leanWithId: false, 
+                select: { emotions: false }
+            }
+        );
+        const jsonRes: EP.Response = {
+            total: page.total,
+            data:  page.docs as EP.Photo[]
         };
-        res.json(jsonResponse);
+        
+        res.json(jsonRes);
     });

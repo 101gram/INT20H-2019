@@ -5,14 +5,9 @@ import theme from '@theme/index';
 import Header from '@components/header/Header';
 import Footer from '@components/footer/Footer';
 import Main from '@components/main/Main';
-import { SiteContext } from '@configs/site';
 // import { FlickrService } from '@services/FlickrService';
 import { Provider } from 'react-redux';
-import store from '@configs/configureReduxStore';
-
-export interface State extends React.ComponentState {
-    siteName: string;
-}
+import store from '@configs/configureReduxStore'; 
 
 
 // (async () => {
@@ -23,22 +18,19 @@ export interface State extends React.ComponentState {
 // })().then(() => {});
 
 export const MyContext = React.createContext({});
-class App extends React.Component<{}, State> {
-
-
+class App extends React.Component {
     render() {
         return (
             <Provider store={store}>
                 <MuiThemeProvider theme={ theme }>
-                    <SiteContext.Provider value={{siteName: "Emotion picker"}}>
-                        <CssBaseline />
-                        <Header />
-                        <Main />
-                        <Footer />
-                    </SiteContext.Provider>
+                    <CssBaseline />
+                    <Header />
+                    <Main />
+                    <Footer />
                 </MuiThemeProvider>
             </Provider>
         );
     }
 }
+
 export default App;

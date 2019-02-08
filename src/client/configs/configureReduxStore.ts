@@ -1,4 +1,5 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose, Action as ActionCommon } from 'redux';
+import { PhotosState } from '@actions/fetchPhotos';
 import rootReducer from '@reducers/index';
 import thunk from 'redux-thunk';
 
@@ -9,19 +10,12 @@ const composeEnhancers = windowIfDefined.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 const enhancer = composeEnhancers(
     applyMiddleware(thunk),
 );
+export interface Action<T = unknown> extends ActionCommon  {
+    payload: T;
+}
 
-const store = createStore(rootReducer, enhancer);
+export interface ApplicationStore {
+    photos: PhotosState;
+}
 
-/**
- *  type for state in web front application
- *  @param TData - there you can store some date 
- *  ******************
- *  hint: errorMassage could be null, if there wasn't any error before
- */
-export type DefaultState<TData> = {
-    isFetching: boolean,
-    errorMessage: string | null,
-    data: TData;
-};
-
-export default store;
+export default createStore(rootReducer, enhancer);

@@ -10,6 +10,7 @@
         ],
         "paths": {
             "@routes/*":  [ "routes/*"    ],
+            "@models/*":  [ "models/*"    ],
             "@modules/*": [ "modules/*"   ],
             "@app/*":     [ "./*"         ],
             "@common/*":  [ "../common/*" ]

@@ -1,6 +1,26 @@
-.cardText::before {
-    content: "";
-    display: inline-block;
-    vertical-align: middle;
-    height: 100%;
+.cardText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 } 
+
+.cardContent {
+    padding-bottom: 5px !important;
+}
+
+.iconFloat {
+    display: block;
+    float: left;    
+}
+
+.d-inline-block {
+    display: inline-block !important;
+}
+
+.f-right {
+    float: right;
+}
+
+.f-left {
+    float: left;
+}

@@ -20,7 +20,8 @@ export namespace FacePP {
     export const ApiSecret = tryReadEnv('FACEPP_API_SECRET');
 }
 
-export const Port = tryReadEnv('PORT');
+export const Port        = tryReadEnv('PORT');
+export const DatabaseUrl = tryReadEnv('DATABASE_URL');
 
 
 function tryReadEnv(variableId: string, defaultVal?: string) {

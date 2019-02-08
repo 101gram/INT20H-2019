@@ -2,6 +2,7 @@ import _ from 'lodash';
 import QueryString from 'querystring';
 import fetch from 'node-fetch';
 import * as Vts from 'vee-type-safe';
+import { Log } from '@modules/debug';
 import FormData from 'form-data';
 
 export type JsonRoot = Vts.BasicObject | any[];
@@ -72,7 +73,8 @@ export async function postFormDataAndGetJson<TJsonResponse extends JsonRoot>(
     const response = await fetch(endpoint, { method: 'post', body });
 
     if (!response.ok) {
-        throw new Error(response.statusText);
+        Log.info(response);
+        throw new Error(`${endpoint} responded with '${response.statusText}'`);
     }
 
     const jsonResponse = await response.json();

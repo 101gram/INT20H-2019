@@ -2,9 +2,9 @@ import * as React from 'react';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-const styles = ({ palette, spacing }: Theme) => createStyles({
+const styles = ({ spacing }: Theme) => createStyles({
     heroUnit: {
-      backgroundColor: palette.background.paper,
+      backgroundColor: "inherit"//palette.background.paper,
     },
     heroContent: {
       maxWidth: 600,

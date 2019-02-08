@@ -68,9 +68,19 @@ export function * pickRandomItems<T>(arr: T[], times: number[]) {
     }
 }
 
+/**
+ * Awaits `routine()` and prints its execution time to the console.
+ */
 export async function measurePerformance(routine: () => Promise<void>, functionName: string) {
     const before = Date.now();
     await routine();
     const after = Date.now();
     Log.info(`${functionName} was running ${after - before} ms`);
+}
+
+/**
+ * Returns a Promise, that will be resolve in `msec` miliseconds.
+ */
+export function delay(msec: number) {
+    return new Promise(resolve => setInterval(resolve, msec));
 }

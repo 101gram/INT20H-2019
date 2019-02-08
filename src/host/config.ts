@@ -18,6 +18,7 @@ export namespace Flickr {
 export namespace FacePP {
     export const ApiKey    = tryReadEnv('FACEPP_API_KEY');
     export const ApiSecret = tryReadEnv('FACEPP_API_SECRET');
+    export const QueryPerSecond = 1;
 }
 
 export const Port        = tryReadEnv('PORT');

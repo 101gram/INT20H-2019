@@ -13,15 +13,9 @@ import Chip from '@material-ui/core/Chip';
 import { Typography } from '@material-ui/core';
 
 const styles = ({ palette, spacing }: Theme) => createStyles({
-    root: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     formControl: {
         margin: spacing.unit * 3,
         width: 550
-    //    width: "100%"
     },
     formLabel: {
         color: palette.secondary.main,
@@ -35,25 +29,27 @@ const styles = ({ palette, spacing }: Theme) => createStyles({
     chip: {
         margin: spacing.unit / 4,
     },
-    PaperProps: {
-        style: {
-          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-          // width: '100%'
-        }, 
+    formContainer: {
+        display: 'flex',
+        alignItems: 'center', 
+        justifyContent: 'center'
     },
+    labelHelper: {
+        position: 'initial'
+    }
 });
 
-// стой
-const ITEM_HEIGHT = 90;
+const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        // width: '100%'
-      }, 
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
     },
+  },
 };
+
   
 
 export interface Props extends WithStyles<typeof styles> {}
@@ -83,28 +79,30 @@ class EmotionFilter extends React.Component<Props> {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
-                <FormControl className={classes.formControl}>
-                <Typography variant="h6" component="h6" className={classes.formLabel}>Select emotions to filter results:</Typography>
-                <InputLabel htmlFor="select-multiple-chip">Chip</InputLabel>
-                <FormGroup>
-                    <Select
-                        multiple
-                        value={this.state.selectedEmotions}
-                        onChange={this.handleChange}
-                        input={<Input id="select-multiple-chip" />}
-                        renderValue={this.renderSelectValue} // this.setState({ name: event.target.value }); otvetil v discorde   tak ono prosto perepisivaet masiv kakya ponyal        dscord glyan                df
-                        MenuProps={MenuProps}
-                    >
-                    {EP.PossibleEmotions.map(value => (
-                        <MenuItem key={value} value={value}>
-                            {value}
-                        </MenuItem>
-                    ))}
-                    </Select>
-                </FormGroup>
-                <FormHelperText>Choose emotions to filter them</FormHelperText>
-                </FormControl>
+            <div>
+                <Typography variant="h6" component="h6" className={classes.formLabel}>You can choose emotions to filter pictures by:</Typography>
+                <div className={classes.formContainer}>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel className={classes.labelHelper} htmlFor="select-multiple-chip">Select the emotions</InputLabel>
+                        <FormGroup>
+                            <Select
+                                multiple
+                                value={this.state.selectedEmotions}
+                                onChange={this.handleChange}
+                                input={<Input id="select-multiple-chip" />}
+                                renderValue={this.renderSelectValue} 
+                                MenuProps={MenuProps}
+                            >
+                            {EP.PossibleEmotions.map(value => (
+                                <MenuItem key={value} value={value}>
+                                    {value}
+                                </MenuItem>
+                            ))}
+                            </Select>
+                        </FormGroup>
+                        <FormHelperText>Choose emotions to filter them</FormHelperText>
+                    </FormControl>
+                </div>
             </div>
         );
     }

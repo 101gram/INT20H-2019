@@ -9,9 +9,6 @@ const styles = ({  spacing }: Theme) => createStyles({
     icon: {
         marginRight: spacing.unit * 2,
     },
-    heroUnit: {
-        backgroundColor: 'inherit'//palette.background.paper, 
-    },
     heroContent: {
         maxWidth: 1000,
         height: 500,
@@ -35,21 +32,21 @@ class Main extends React.Component<Props, State> {
         currentPhoto: null
     };
 
+    setCurrentPhoto = (photo: EP.Photo) => {
+        this.setState({ currentPhoto: photo });
+    }
+
     render() {
-        const { classes } = this.props;
+       // const { classes } = this.props;
         return (
             <main>
-                <div className={classes.heroUnit}>
-                    <div className={classes.heroContent}>
-                        <MediaControlCard 
-                            isDisabled={this.state.currentPhoto === null} 
-                            currentPhoto={this.state.currentPhoto}
-                        />
-                        <ImageReplacer
-                            isDisabled={this.state.currentPhoto !== null}
-                        />
-                    </div> 
-                </div>
+                <MediaControlCard 
+                    isDisabled={this.state.currentPhoto === null} 
+                    currentPhoto={this.state.currentPhoto}
+                />
+                <ImageReplacer
+                    isDisabled={this.state.currentPhoto !== null}
+                />
                 <ImageGridViewer />
             </main>
         );

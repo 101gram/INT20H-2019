@@ -2,10 +2,10 @@ import Mongoose from 'mongoose';
 import * as Debug  from '@modules/debug';
 import * as Path   from 'path';
 import * as Config from '@app/config';
-import * as Utils  from '@modules/utils';
+// import * as Utils  from '@modules/utils';
 import { router as apiRouter } from '@routes/api';
 import Express from 'express';
-import { Photo } from '@models/photo';
+// import { Photo } from '@models/photo';
 //import * as BodyParser from 'body-parser';
   
 const app = Express()
@@ -33,7 +33,7 @@ Mongoose.connect(Config.DatabaseUrl, {
         Config.Port,
         () => Debug.Log.info(`🚀  Server is listening on port ${Config.Port}`)
     );
-    await Utils.measurePerformance(() => Photo.updateDatabase(), 'updateDatabase()');
+    // await Utils.measurePerformance(() => Photo.updateDatabase(), 'updateDatabase()');
     
 })
 .catch(err => {

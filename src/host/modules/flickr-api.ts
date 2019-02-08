@@ -155,7 +155,7 @@ export class FlickrAPI {
         const response = await this.fetchJson<FlickrPhotosSearchResponse>({
                 ...paginationParams,
                 method:  'flickr.photos.search',
-                text:    `#${Config.Flickr.TargetPhotoTag}`,
+                tags:    `${Config.Flickr.TargetPhotoTag}`,
                 media:   'photos'
             },
             FlickrPhotosSearchResponseTD

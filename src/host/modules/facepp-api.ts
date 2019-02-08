@@ -1,5 +1,7 @@
 import _        from 'lodash';
-import * as Vts from 'vee-type-safe';
+import * as Vts     from 'vee-type-safe';
+import * as Config  from '@app/config';
+import * as Utils   from '@modules/utils';
 import * as Network from '@modules/network';
 import { EP } from '@common/interfaces';
 
@@ -32,22 +34,30 @@ const FaceappResponseTD: Vts.TypeDescriptionOf<FaceppResponse> = {
 };
 
 export class FaceppAPI {
+    private lastQueryTime = -Infinity;
+    private static readonly minDelay = 1000 / Config.FacePP.QueryPerSecond;
+
     constructor(
         private readonly api_key: string, 
         private readonly api_secret: string
     ) {}
 
     async getFacesEmotions(imageUrl: string){
+        const sinceLastQuery = Date.now() - this.lastQueryTime;
+        if (sinceLastQuery < FaceppAPI.minDelay) {
+            await Utils.delay(FaceppAPI.minDelay - sinceLastQuery);
+        }
         const { faces } = await Network.postFormDataAndGetJson<FaceppResponse>({
             endpoint: 'https://api-us.faceplusplus.com/facepp/v3/detect',
             formData: {
-                'api_key':           this.api_key,
-                'api_secret':        this.api_secret,
-                'image_url':         imageUrl,
-                'return_attributes': 'emotion'
+                api_key:           this.api_key,
+                api_secret:        this.api_secret,
+                image_url:         imageUrl,
+                return_attributes: 'emotion'
             },
             jsonTypedescr: FaceappResponseTD
         });
+        this.lastQueryTime = Date.now();
         const emotions: EP.Emotion[] = [];
         for (const { attributes } of faces) {
             if (attributes != null) {

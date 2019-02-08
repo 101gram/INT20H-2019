@@ -5,7 +5,7 @@ import * as Utils   from '@modules/utils';
 import * as Network from '@modules/network';
 import { EP } from '@common/interfaces';
 
-interface Face {
+interface Face { 
     attributes?: Vts.Maybe<{
         emotion: Vts.BasicObjectMap<EP.Emotion, number>
     }>;

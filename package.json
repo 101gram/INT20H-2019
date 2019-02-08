@@ -4,16 +4,22 @@
   "description": "",
   "main": "src/host/index.ts",
   "scripts": {
-    "clean": "rm -rf ./dist && rm -rf ./build",
-    "start": "node build/host/index.js",
+    "build-client:prod":"webpack --config src/client/webpack.config.js --mode production",
+    "build-client":     "webpack --config src/client/webpack.config.js --mode development --progress",
+    "build-host":       "cd src/host/ && tsc && ef-tspm && cd ../../",
+    "build:prod":       "npm run clean && npm run build-host && npm run build-client:prod",
+    "build":            "npm run clean && npm run build-host && npm run build-client",
+
+    "clean":            "rm -rf dist build",
+
+    "dev":              "npm-run-all --parallel watch:client watch:server",
+
     "heroku-postbuild": "npm run build:prod",
-    "build-host": "tsc --p ./src/host/ && cd src/host/ && ef-tspm && cd ../../",
-    "build:prod": "npm run clean && npm run build-host && webpack --config ./src/client/webpack.config.js --mode production",
-    "build": "npm run clean && npm run build-host &&  webpack --config ./src/client/webpack.config.js --mode development --progress",
-    "dev": "npm run build && npm-run-all --parallel watch:server watch:build start:server",
-    "watch:build": "webpack --config ./src/client/webpack.config.js --watch --mode development",
-    "watch:server": "tsc --p ./src/host/ --watch",
-    "start:server": "nodemon"
+    
+    "watch:client":     "webpack --config src/client/webpack.config.js --watch --mode development",
+    "watch:server":     "nodemon",
+
+    "start":            "node build/host/index.js"
   },
   "repository": {
     "type": "git",

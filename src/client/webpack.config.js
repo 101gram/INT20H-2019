@@ -1,8 +1,8 @@
 // @ts-check
 
-const path = require('path'),
-  HtmlWebPackPlugin = require("html-webpack-plugin"),
-  MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Path                 = require('path');
+const HtmlWebPackPlugin    = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: {
@@ -24,14 +24,14 @@ module.exports = {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: { 
-            "@common":     path.resolve(__dirname, "../common"),
-            "@components": path.resolve(__dirname, "components"),
-            "@reducers":   path.resolve(__dirname, "reducers"),
-            "@actions":    path.resolve(__dirname, "actions"),
-            "@theme":      path.resolve(__dirname, "theme"),
-            "@configs":    path.resolve(__dirname, "configs"),
-            "@containers": path.resolve(__dirname, "containers"),
-            "@services":   path.resolve(__dirname, "services")
+            "@common":     relativePath("../common" ),
+            "@components": relativePath("components"),
+            "@reducers":   relativePath("reducers"  ),
+            "@actions":    relativePath("actions"   ),
+            "@theme":      relativePath("theme"     ),
+            "@configs":    relativePath("configs"   ),
+            "@containers": relativePath("containers"),
+            "@services":   relativePath("services"  )
         },
     },
 
@@ -85,7 +85,7 @@ module.exports = {
     
     plugins: [
         new HtmlWebPackPlugin({
-            template: path.join(__dirname, "./index.html"),
+            template: relativePath("index.html"),
         }),
         new MiniCssExtractPlugin({
             filename: "[name].css",
@@ -105,3 +105,8 @@ module.exports = {
     //     "react-dom": "ReactDOM"
     // }
 };
+
+
+function relativePath(pathString) {
+    return Path.resolve(__dirname, pathString);
+}

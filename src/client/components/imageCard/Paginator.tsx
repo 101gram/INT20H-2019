@@ -41,8 +41,8 @@ class Paginator extends React.Component<Props> {
             <div className={classes.navBarBottom}>
                 <Pagination
                     limit={12}
-                    offset={this.props.currentPage * 12}
-                    total={100}
+                    offset={(this.props.currentPage - 1) * 12}
+                    total={this.props.total}
                     onClick={this.props.cbPageChanged()}
                     currentPageColor="default"
                     otherPageColor="secondary"

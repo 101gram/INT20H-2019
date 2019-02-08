@@ -27,25 +27,28 @@ const styles = ({ palette, spacing }: Theme) => createStyles({
         justifyContent: 'center'
     },
     chip: {
-        margin: spacing.unit / 4,
+        margin: `-6px 2px -2px 2px`,
+        height: 27
     },
     formContainer: {
         display: 'flex',
         alignItems: 'center', 
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop: 20
     },
     labelHelper: {
         position: 'initial'
+    },
+    selectMultiple: {
+        //height: 60
     }
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+        maxHeight: 224,
+        width: 550,
     },
   },
 };
@@ -91,6 +94,7 @@ class EmotionFilter extends React.Component<Props> {
                                 onChange={this.handleChange}
                                 input={<Input id="select-multiple-chip" />}
                                 renderValue={this.renderSelectValue} 
+                                className={classes.selectMultiple}
                                 MenuProps={MenuProps}
                             >
                             {EP.PossibleEmotions.map(value => (

@@ -9,7 +9,9 @@ import { connect } from 'react-redux';
 import { ApplicationStore } from '@configs/configureReduxStore';
 import { fetchPhotos, FetchPhotosThunkDispatch } from '@actions/fetchPhotos';
 import EmotionFilter from '@components/imageCard/EmotionFiter';
- 
+import { EP } from '@common/interfaces';
+import { withSnackbar, InjectedNotistackProps } from 'notistack';
+
 const styles = ({ spacing, breakpoints}: Theme) => createStyles({
     layout: {
         width: 'auto',
@@ -26,8 +28,9 @@ const styles = ({ spacing, breakpoints}: Theme) => createStyles({
     }
 });
 
+/*
 //#region 
-const cardsObjects = [
+const cardsObjects: EP.Photo[] = [
     {
         id: 1,
         title: "Bla-bla FDGDdbcbfhtdjhggfggh",
@@ -114,22 +117,41 @@ const cardsObjects = [
     }
 ];
 //#endregion
-
-export interface Props extends WithStyles<typeof styles> {
+*/
+export interface Props extends WithStyles<typeof styles>, InjectedNotistackProps {
     photos: PhotosState;
     getAllPhotos: Function;
+    // getCurrentlySelectedPhoto: Function;
 }
 
-class ImageGridViewer extends React.Component<Props> {
+interface State {
+    currentPhoto: EP.Photo | null;
+}
+
+class ImageGridViewer extends React.Component<Props, State> {
     static mapStateToProps(store: ApplicationStore) {
         return { photos: store.photos };
     }
 
     static mapDispatchToProps(dispatch: FetchPhotosThunkDispatch) {
-        return { getAllPhotos: () => dispatch(fetchPhotos()) };
+        return { getAllPhotos: (page: number, emotions: EP.Emotion[]) => dispatch(fetchPhotos(page, emotions)) };
     }
 
-    handleClickNavigation = (_e : any) => {
+    state = {
+        currentPhoto: null
+    };
+
+    componentDidMount() {
+        this.props.getAllPhotos(1, []);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.photos.lastError !== this.props.photos.lastError) {
+            this.props.enqueueSnackbar(this.props.photos.lastError, { variant: 'error' });
+        }
+    }
+
+    handleClickNavigation = (_e: React.MouseEvent) => {
         if (!this.props.photos.isFetching) {
             // const page = _e.currentTarget.getAttribute("offset") / 12;
             // if (!page) return;
@@ -138,15 +160,15 @@ class ImageGridViewer extends React.Component<Props> {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, photos } = this.props;
         return (
             <React.Fragment>
                 <div className={classNames(classes.layout, classes.cardGrid)}>
                     <EmotionFilter />
                     <Grid container spacing={40}>
-                        {cardsObjects.map((card, _index) => (
-                            <Grid item key={card.id} xs={12} sm={6} md={4} lg={3}>
-                                <ImageCard {...card}/>
+                        {photos.photosOnPage.map((photo, index) => (
+                            <Grid onClick={this.handleClickNavigation} item key={index} xs={12} sm={6} md={4} lg={3}>
+                                <ImageCard photo={photo}  />
                             </Grid>
                         ))} 
                     </Grid>
@@ -163,4 +185,4 @@ class ImageGridViewer extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles)(connect(ImageGridViewer.mapStateToProps, ImageGridViewer.mapDispatchToProps)(ImageGridViewer));
+export default withStyles(styles)(connect(ImageGridViewer.mapStateToProps, ImageGridViewer.mapDispatchToProps)(withSnackbar(ImageGridViewer)));

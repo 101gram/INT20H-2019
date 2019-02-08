@@ -1,4 +1,5 @@
 import Express from 'express';
+import _       from 'lodash';
 import * as Vts    from 'vee-type-safe';
 import * as VtsEx  from 'vee-type-safe/express';
 import { EP    } from '@common/interfaces';
@@ -7,14 +8,14 @@ import { Photo } from '@models/photo';
 
 interface EmotionsPhotosQueryParams {
     // stringified numbers
-    offset:  string;  
-    limit:   string;
-    emotion: string;
+    offset:   string;  
+    limit:    string;
+    emotion?: string;
 }
 const EmotionsPhotosQueryParamsTD: Vts.TypeDescriptionOf<EmotionsPhotosQueryParams> = {
     offset:  'string',
     limit:   'string',
-    emotion: 'string'
+    emotion: Vts.optional('string')
 };
 
 export const router = Express.Router()
@@ -25,17 +26,22 @@ export const router = Express.Router()
         const limit  = parseInt(query.limit, 10);
         Vts.ensureMatch(offset, Vts.isZeroOrPositiveInteger);
         Vts.ensureMatch(limit,  Vts.isZeroOrPositiveInteger);
-        const emotions = query.emotion.split(',');
-        Vts.ensureMatch(emotions, [Vts.isOneOf(EP.PossibleEmotions)]);
+        const emotions = query.emotion ? query.emotion.split(',') : null;
+        Vts.ensureMatch(emotions, Vts.isNullOr([Vts.isOneOf(EP.PossibleEmotions)]));
+
+        const projection = _.mapValues(EP.PhotoTD, () => true);
+        projection._id = false;
 
         const page = await Photo.paginate(
-            { emotions: { $elemMatch: { $in: emotions } } },
+            emotions 
+                ? { emotions: { $elemMatch: { $in: emotions } } }
+                : {},
             { 
                 offset, 
                 limit, 
                 lean: true, 
                 leanWithId: false, 
-                select: { emotions: false }
+                select: projection  
             }
         );
         const jsonRes: EP.Response = {

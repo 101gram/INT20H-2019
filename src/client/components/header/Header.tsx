@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 // import Button from '@material-ui/core/Button';
 // import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
+import TagFaces from '@material-ui/icons/TagFaces';
 
 const styles = createStyles({
     root: {
@@ -18,6 +18,9 @@ const styles = createStyles({
         marginLeft: -12,
         marginRight: 20,
     },
+    icon: {
+        marginRight: 5
+    }
 });
 
 export interface Props extends WithStyles<typeof styles> {
@@ -34,6 +37,7 @@ class Header extends React.Component<Props> {
                     {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                         <MenuIcon />
                     </IconButton> */}
+                    <TagFaces fontSize="large" className={classes.icon} />
                     <Typography variant="h6" color="inherit" className={classes.grow}>
                         {"Emotion Picker"}
                     </Typography>

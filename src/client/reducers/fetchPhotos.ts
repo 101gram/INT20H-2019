@@ -13,14 +13,25 @@ const initialState = {
 export default function photosReducer(state = initialState, action: PhotosActions) {
     const data = action.payload;
     switch (action.type) {
-        case FETCH_PHOTOS_FAILURE:
-        case FETCH_PHOTOS_REQUEST:
+        case FETCH_PHOTOS_FAILURE:{
+            return {
+                ...state, 
+                isFetching: data.isFetching,
+                lastError: data.lastError
+            };
+        }
+        case FETCH_PHOTOS_REQUEST: {
+            return {
+                ...state, 
+                isFetching: data.isFetching
+            };
+        }
         case FETCH_PHOTOS_SUCCESS: {
             return {
                 ...state, 
                 isFetching: data.isFetching,
                 allPages: data.allPages,
-                countAllPhotos: data.countAllPhotos,
+                // countAllPhotos: data.countAllPhotos,
                 currentPage: data.currentPage,
                 photosOnPages: data.photosOnPage,
                 selectedEmotion: data.selectedEmotions

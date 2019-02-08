@@ -35,7 +35,7 @@ export namespace EP { // EmotionsPhotos
     export interface Request {
         offset:   number;
         limit:    number;
-        emotion?: Emotion | Emotion[]; // coma delimited list of emotions
+        emotion:  Emotion[]; // coma delimited list of emotions
     }
 
     export interface FlickrPhoto {

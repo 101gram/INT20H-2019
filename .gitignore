@@ -79,8 +79,5 @@ typings/
 # webpack dist
 dist/
 
-#tsc
+# tsc
 build/
-
-#flickr data
-/data/

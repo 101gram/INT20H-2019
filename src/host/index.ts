@@ -14,15 +14,15 @@ const app = Express()
 .use(Express.static('./dist/'))
 .use('/api/v1', apiRouter)
 
-.get('*', (_req, res) => {
+.get('*', (_req, res) => { 
     res.sendFile(Path.join(__dirname,`/../../dist/index.html`));
-})
-
+}) 
+    
 .use(((err, _req, res, _next) => {
     Debug.Log.error(err);
     return res.sendFile(Path.join(__dirname,`/../../dist/index.html`));
 }) as Express.ErrorRequestHandler);
-
+ 
 Mongoose.connect(Config.DatabaseUrl, { 
     useNewUrlParser:  true,
     keepAlive:        true, 

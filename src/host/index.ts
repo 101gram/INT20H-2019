@@ -6,10 +6,8 @@ import * as Config from '@app/config';
 import { router as apiRouter } from '@routes/api';
 import Express from 'express';
 // import { Photo } from '@models/photo';
-//import * as BodyParser from 'body-parser';
   
 const app = Express()
-//app.use(BodyParser.json());
 
 .use(Express.static('./dist/'))
 .use('/api/v1', apiRouter)

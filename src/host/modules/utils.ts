@@ -2,8 +2,10 @@ import _ from 'lodash';
 import * as MathJS from 'mathjs';
 import * as Vts    from 'vee-type-safe';
 import * as Utils  from '@modules/utils';
-import { IntegerRange  } from '@modules/integer-range';
-import { assert, Log   } from '@modules/debug';
+import * as Coll   from 'typescript-collections';
+import { IntegerRange } from '@modules/integer-range';
+import { assert, Log  } from '@modules/debug';
+
 
 /**
  * Returns a random item from the given array. 
@@ -84,3 +86,40 @@ export async function measurePerformance(routine: () => Promise<void>, functionN
 export function delay(msec: number) {
     return new Promise(resolve => setInterval(resolve, msec));
 }
+
+
+/** Rate limit ensures a function is never called more than every [rate]ms
+ *  Unlike lodash's _.throttle function, function calls are queued so that
+ *   requests are never lost and simply deferred until some other time.
+ *
+ * @param func Async function to limit execution rate.
+ * @param minDelay Minimum time to wait between function calls (miliseconds).
+ *
+ * @copyright https://gist.github.com/mattheworiordan/1084831 
+ */
+export function limitExecRate<
+    TFn extends Vts.AsyncRoutine<any[], any>, 
+    TThis = unknown
+>(func: TFn, minDelay: number) {
+    const queue   = new Coll.Queue<[(res: Vts.AsyncReturnType<TFn>) => void, TThis, Parameters<TFn>]>();
+    let isWaiting = false;
+    
+    return function wrapper(this: TThis, ...args: Parameters<TFn>) {
+        return new Promise<Vts.AsyncReturnType<TFn>>(resolve => {
+            if (isWaiting) {
+                queue.enqueue([resolve, this, args]);
+            } else {
+                setTimeout(() => {
+                    isWaiting = false;
+                    if (!queue.isEmpty()) {
+                        const [headResolve, headThis, headArgs] = queue.dequeue()!;
+                        wrapper.apply(headThis, headArgs).then(headResolve);
+                    }
+                }, minDelay);
+                isWaiting = true;
+                func.apply(this, args).then(resolve);
+            }
+        });
+    };
+}
+ 

@@ -17,7 +17,7 @@ const styles = ({ palette }: Theme) => createStyles({
         flexDirection: 'column'
     },
     cardMedia: {
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '75%', // 4:3 <-- now  // 16:9
     },
     cardContent: {
         padding: "2px 10px",
@@ -42,12 +42,13 @@ const styles = ({ palette }: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
     photo: EP.Photo;
+    cbGetSelectedPhoto: (photo: EP.Photo) => void;
 }
 
 class ImageCard extends React.Component<Props> {
     renderAlbum() {
         return (
-            <div>
+            <div title="was found from album">
                 <PhotoAlbum className="iconFloat" fontSize="small" color="secondary"/>
                 <Typography className="d-inline-block">
                     INT20h 
@@ -58,7 +59,7 @@ class ImageCard extends React.Component<Props> {
 
     renderTag(clasIcon: string) {
         return (
-            <div className="f-right">
+            <div title="was found by tag" className="f-right">
                 <i className={clasIcon}>#</i>
                 <Typography className="d-inline-block">
                     int20h
@@ -67,13 +68,17 @@ class ImageCard extends React.Component<Props> {
         );
     }
 
+    handleClick = (_event: React.MouseEvent<HTMLElement>) => {
+        this.props.cbGetSelectedPhoto(this.props.photo);
+    }
+
     render() {
         const { classes, photo } = this.props;
         return (
-            <Card className={classes.card}>
+            <Card onClick={this.handleClick} className={classNames(classes.card, "imageCard")}>
                 <CardMedia
                     className={classes.cardMedia}
-                    image={EP.photoToUrl(photo, EP.PhotoSize._640)}
+                    image={EP.photoToUrl(photo, EP.PhotoSize._320)}
                     title={photo.title}
                 />
                 <CardContent className={classNames(classes.cardContent, "cardContent")}> 

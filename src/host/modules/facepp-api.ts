@@ -3,7 +3,8 @@ import * as Vts     from 'vee-type-safe';
 import * as Config  from '@app/config';
 import * as Utils   from '@modules/utils';
 import * as Network from '@modules/network';
-import { EP } from '@common/interfaces';
+import { Log } from '@modules/debug';
+import { EP  } from '@common/interfaces';
 
 interface Face { 
     attributes?: Vts.Maybe<{
@@ -34,19 +35,12 @@ const FaceappResponseTD: Vts.TypeDescriptionOf<FaceppResponse> = {
 };
 
 export class FaceppAPI {
-    private lastQueryTime = -Infinity;
-    private static readonly minDelay = 1000 / Config.FacePP.QueryPerSecond;
-
     constructor(
-        private readonly api_key: string, 
+        private readonly api_key:    string, 
         private readonly api_secret: string
     ) {}
-
+    static totalInvoked = 0;
     async getFacesEmotions(imageUrl: string){
-        const sinceLastQuery = Date.now() - this.lastQueryTime;
-        if (sinceLastQuery < FaceppAPI.minDelay) {
-            await Utils.delay(FaceppAPI.minDelay - sinceLastQuery);
-        }
         const { faces } = await Network.postFormDataAndGetJson<FaceppResponse>({
             endpoint: 'https://api-us.faceplusplus.com/facepp/v3/detect',
             formData: {
@@ -57,7 +51,7 @@ export class FaceppAPI {
             },
             jsonTypedescr: FaceappResponseTD
         });
-        this.lastQueryTime = Date.now();
+        Log.info(`#${++FaceppAPI.totalInvoked} fetched emotion...}`);
         const emotions: EP.Emotion[] = [];
         for (const { attributes } of faces) {
             if (attributes != null) {
@@ -72,3 +66,7 @@ export class FaceppAPI {
     }
 }
 
+FaceppAPI.prototype.getFacesEmotions = Utils.limitExecRate(
+    FaceppAPI.prototype.getFacesEmotions,
+    1000 / Config.FacePP.QueryPerSecond
+);

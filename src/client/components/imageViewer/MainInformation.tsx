@@ -2,6 +2,7 @@ import * as React from 'react';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+
 const styles = ({ spacing }: Theme) => createStyles({
     heroUnit: {
       backgroundColor: "inherit"//palette.background.paper,
@@ -14,15 +15,11 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-    isDisabled: boolean;
 }
 
-class ImageReplacer extends React.Component<Props>{
+class MainInformation extends React.Component<Props>{
     render() {
         const { classes } = this.props;
-        if(this.props.isDisabled){
-            return null;
-        }
         return(
             <div className={classes.heroUnit}>
                 <div className={classes.heroContent}>
@@ -39,4 +36,4 @@ class ImageReplacer extends React.Component<Props>{
     }
 }
 
-export default withStyles(styles)(ImageReplacer);
+export default withStyles(styles)(MainInformation);

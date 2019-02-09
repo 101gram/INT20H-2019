@@ -2,8 +2,8 @@ import * as React from 'react';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { EP } from '@common/interfaces';
 import ImageGridViewer from '@components/imageCard/GridViewer';
-import MediaControlCard from '@components/imageViewer/MainImage';
-import ImageReplacer from '@components/imageViewer/ImageReplacer';
+import ImageModal from '@components/imageViewer/ImageModal';
+import MainInformation from '@components/imageViewer/MainInformation';
 
 const styles = ({  spacing }: Theme) => createStyles({
     icon: {
@@ -36,18 +36,21 @@ class Main extends React.Component<Props, State> {
         this.setState({ currentPhoto: photo });
     }
 
+    unsetCurrentPhoto = () => {
+        this.setState({ currentPhoto: null });
+    }
+
     render() {
        // const { classes } = this.props;
         return (
             <main>
-                <MediaControlCard 
+                {/* <MediaControlCard 
                     isDisabled={this.state.currentPhoto === null} 
                     currentPhoto={this.state.currentPhoto}
-                />
-                <ImageReplacer
-                    isDisabled={this.state.currentPhoto !== null}
-                />
-                <ImageGridViewer />
+                /> */}
+                <ImageModal cbModalClosed={this.unsetCurrentPhoto} currentPhoto={this.state.currentPhoto}/>
+                <MainInformation />
+                <ImageGridViewer cbGetSelectedPhoto={this.setCurrentPhoto}/>
             </main>
         );
     }

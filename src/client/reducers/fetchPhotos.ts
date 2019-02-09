@@ -17,7 +17,8 @@ export default function photosReducer(state = initialState, action: PhotosAction
             return {
                 ...state, 
                 isFetching: data.isFetching,
-                lastError: data.lastError
+                lastError: data.lastError,
+                lastErrorDate: data.lastErrorDate
             };
         }
         case FETCH_PHOTOS_REQUEST: {
@@ -30,11 +31,10 @@ export default function photosReducer(state = initialState, action: PhotosAction
             return {
                 ...state, 
                 isFetching: data.isFetching,
-                allPages: data.allPages,
-                // countAllPhotos: data.countAllPhotos,
+                countAllPhotos: data.countAllPhotos,
                 currentPage: data.currentPage,
-                photosOnPages: data.photosOnPage,
-                selectedEmotion: data.selectedEmotions
+                photosOnPage: data.photosOnPage,
+                selectedEmotions: data.selectedEmotions
             };
         }
         default: {

@@ -35,7 +35,7 @@ export namespace EP { // EmotionsPhotos
     export interface Request {
         offset:   number;
         limit:    number;
-        emotion:  Emotion[]; // coma delimited list of emotions
+        emotion:  string | null; // coma delimited list of emotions g
     }
 
     export interface FlickrPhoto {
@@ -49,15 +49,18 @@ export namespace EP { // EmotionsPhotos
         tag:      boolean;
         photoset: boolean;
     }
+    // https://www.flickr.com/services/api/misc.urls.html
     export const enum PhotoSize {
-        _240   = 'm',   // small, 240 on longest side
-        _75x75 = 's',   // small square 75x75
-        _100   = 't',   // thumbnail, 100 on longest side
-        _640   = 'z',   // medium 640, 640 on longest side
-        _1024  = 'b'    // large, 1024 on longest side*
+        _240   = '_m',   // small, 240 on longest side
+        _75x75 = '_s',   // small square 75x75
+        _100   = '_t',   // thumbnail, 100 on longest side
+        _500   = '',
+        _320   = '_n',
+        _640   = '_z',   // medium 640, 640 on longest side
+        _1024  = '_b'    // large, 1024 on longest side*
     }
-    export function photoToUrl({farm, server, id, secret}: FlickrPhoto, size = PhotoSize._1024) {
-        return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}_${size}.jpg`;
+    export function photoToUrl({farm, server, id, secret}: Photo, size = PhotoSize._1024) {
+        return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}${size}.jpg`;
     }
 
     export const PhotoTD: Vts.TypeDescriptionOf<Photo> = {

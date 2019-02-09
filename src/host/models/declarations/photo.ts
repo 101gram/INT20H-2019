@@ -5,7 +5,7 @@ import { EP } from '@common/interfaces';
  * This model represents photos fetched via FlickrAPI by tag #int20h and 
  * from the specified photoset.
  */
-export interface PhotoData {
+export interface PhotoDataWithoutId {
     title:     string;
     // id:        string;  // conflicts with Mongoose.Document.id 
     secret:    string;
@@ -15,24 +15,20 @@ export interface PhotoData {
     photoset:  boolean;
     emotions:  EP.Emotion[];
 }
-
+export interface PhotoData extends PhotoDataWithoutId {
+    id: string;
+}
 export interface PhotoMethods {
     
 }
 
 export interface PhotoStatics {
     updateDatabase(this: PhotoModel): Promise<void>;
-
-    // private:
-    getEmotionsForPhotos(
-        this: PhotoModel,
-        photos: Iterable<EP.FlickrPhoto>
-    ): AsyncIterableIterator<PhotoData>;
 }
 
 export interface PhotoDoc extends 
 Mongoose.Document, 
-PhotoData, 
+PhotoDataWithoutId, 
 PhotoMethods 
 {}
 export interface PhotoModel extends 

@@ -55,7 +55,10 @@ const MenuProps = {
 
   
 
-export interface Props extends WithStyles<typeof styles> {}
+export interface Props extends WithStyles<typeof styles> {
+    onChangeEmotions:  (emotions: string[]) => void;
+    isDisabled: boolean;
+}
 
 class EmotionFilter extends React.Component<Props> {
     state = {
@@ -63,7 +66,11 @@ class EmotionFilter extends React.Component<Props> {
     };
 
     handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.setState({ selectedEmotions: event.target.value });
+        const value = event.target.value as unknown;
+        this.setState({
+            selectedEmotions: value
+        });
+        this.props.onChangeEmotions(value as string[]);
     }
 
     renderSelectValue = (selected: SelectProps["value"]) => {
@@ -89,6 +96,7 @@ class EmotionFilter extends React.Component<Props> {
                         <InputLabel className={classes.labelHelper} htmlFor="select-multiple-chip">Select the emotions</InputLabel>
                         <FormGroup>
                             <Select
+                                disabled={this.props.isDisabled}
                                 multiple
                                 value={this.state.selectedEmotions}
                                 onChange={this.handleChange}

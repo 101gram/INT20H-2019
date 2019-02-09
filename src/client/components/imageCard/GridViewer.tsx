@@ -28,104 +28,17 @@ const styles = ({ spacing, breakpoints}: Theme) => createStyles({
     }
 });
 
-/*
-//#region 
-const cardsObjects: EP.Photo[] = [
-    {
-        id: 1,
-        title: "Bla-bla FDGDdbcbfhtdjhggfggh",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: true
-    },
-    {
-        id: 2,
-        title: "Bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: true
-    },
-    {
-        id: 3,
-        title: "Bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: false
-    },
-    {
-        id: 4,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: false,
-        fromTag: true
-    },
-    {
-        id: 5,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: true
-    },
-    {
-        id: 6,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: true
-    },
-    {
-        id: 7,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: true
-    },
-    {
-        id: 8,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: true
-    },
-    {
-        id: 9,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: false,
-        fromTag: true
-    },
-    {
-        id: 10,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: true
-    },
-    {
-        id: 11,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: true,
-        fromTag: false
-    },
-    {
-        id: 12,
-        title: "bla-bla",
-        imgUrl: "https://trainpix.org/photo/02/31/63/231636.jpg",
-        fromAlbum: false,
-        fromTag: true
-    }
-];
-//#endregion
-*/
+
 export interface Props extends WithStyles<typeof styles>, InjectedNotistackProps {
     photos: PhotosState;
     getAllPhotos: Function;
-    // getCurrentlySelectedPhoto: Function;
+    cbGetSelectedPhoto: (photo: EP.Photo) => void;   
 }
 
 interface State {
     currentPhoto: EP.Photo | null;
+    currentPage: number;
+    currentEmotions: string[];
 }
 
 class ImageGridViewer extends React.Component<Props, State> {
@@ -137,48 +50,70 @@ class ImageGridViewer extends React.Component<Props, State> {
         return { getAllPhotos: (page: number, emotions: EP.Emotion[]) => dispatch(fetchPhotos(page, emotions)) };
     }
 
+    loadPage = (page: number) => {
+        this.props.getAllPhotos(page, this.state.currentEmotions);
+        this.setState({
+            currentPage: page
+        });
+    }
+
+    filterByEmotions = (emotions: string[]) => {
+        this.props.getAllPhotos(1, emotions);
+        this.setState({
+            currentPage: 1,
+            currentEmotions: emotions
+        });
+    }
+
     state = {
-        currentPhoto: null
+        currentPhoto: null,
+        currentPage: 0,
+        currentEmotions: []
     };
 
     componentDidMount() {
-        this.props.getAllPhotos(1, []);
+        this.loadPage(1);
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (prevProps.photos.lastError !== this.props.photos.lastError) {
+        if (this.props.photos.lastErrorDate !== 0 && prevProps.photos.lastErrorDate < this.props.photos.lastErrorDate) {
             this.props.enqueueSnackbar(this.props.photos.lastError, { variant: 'error' });
         }
     }
 
-    handleClickNavigation = (_e: React.MouseEvent) => {
+    handleClickNavigation = (_e: object, _offset: number, page: number) => {
         if (!this.props.photos.isFetching) {
-            // const page = _e.currentTarget.getAttribute("offset") / 12;
-            // if (!page) return;
-            // this.props.getAllPhotos(page);
+            this.loadPage(page);
+        }
+    }
+
+    handleChangeEmotions = (emotions: string[]) => {
+        if (!this.props.photos.isFetching) {
+            this.filterByEmotions(emotions as EP.Emotion[]);
         }
     }
 
     render() {
-        const { classes, photos } = this.props;
+        const { props: {classes}} = this;
+        const { props: {photos: {photosOnPage}}} = this;
+        const { props: {photos}} = this;
         return (
             <React.Fragment>
                 <div className={classNames(classes.layout, classes.cardGrid)}>
-                    <EmotionFilter />
+                    <EmotionFilter isDisabled={photos.isFetching} onChangeEmotions={this.handleChangeEmotions} />
                     <Grid container spacing={40}>
-                        {photos.photosOnPage.map((photo, index) => (
-                            <Grid onClick={this.handleClickNavigation} item key={index} xs={12} sm={6} md={4} lg={3}>
-                                <ImageCard photo={photo}  />
+                        {photosOnPage.map((photo, index) => (
+                            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                                <ImageCard photo={photo} cbGetSelectedPhoto={this.props.cbGetSelectedPhoto} />
                             </Grid>
                         ))} 
                     </Grid>
                 </div>
                 <Paginator 
                     currentPage={this.props.photos.currentPage} 
-                    allPages={this.props.photos.allPages} 
-                    total={this.props.photos.countAllPhotos} 
-                    isFetching={this.props.photos.isFetching} 
-                    cbPageChanged={this.handleClickNavigation} 
+                    total={this.props.photos.countAllPhotos}
+                    cbPageChanged={this.handleClickNavigation}
+                    isDisabled={this.props.photos.isFetching}
                 />
             </React.Fragment>
         );

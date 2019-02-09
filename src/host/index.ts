@@ -34,7 +34,6 @@ Mongoose.connect(Config.DatabaseUrl, {
         () => Debug.Log.info(`🚀  Server is listening on port ${Config.Port}`)
     );
     // await Utils.measurePerformance(() => Photo.updateDatabase(), 'updateDatabase()');
-    
 })
 .catch(err => {
     Debug.Log.error(err);

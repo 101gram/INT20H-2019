@@ -100,6 +100,38 @@ export class FlickrAPI {
     }
 
     async fetchAllUnited() {
+        //додати 3 поля lastUpdateDate, countPhotosWithTag, countPhotosFromPhotoset
+
+        //                  нові функції 
+
+        // getCountPhotosWithTag(date: lastUpdateDate) - отримує кількість фото з тегом до дати останнього оновлення
+        // у параметри запиту max_upload_date: lastUpdateDate
+
+        // getCountPhotosFromPhotoset(date: lastUpdateDate) - отримує кількість фото з альбому до дати останнього оновлення
+        // у параметри запиту max_upload_date: lastUpdateDate
+
+        // updatePhotosFromPhotoset(date: lastUpdateDate);
+        //                      у параметри запиту max_upload_date: lastUpdateDate
+        //                   - видаляє старі, завантажує нові фото, установлює значення Database.countPhotosFromPhotoset
+
+        //updatePhotosWithTag(date: lastUpdateDate); 
+        //                      у параметри запиту max_upload_date: lastUpdateDate
+        //                    - видаляє старі, завантажує нові фото, установлює значення Database.countPhotosWithTag
+
+        // у функції updateDatabase() /src/host/models/photo.ts
+
+        //      спочатку перевірка на те, чи не видаляли старі фото
+        // if(Database.countPhotosWithTag !== Scheema.countPhotosWithTag(Database.lastUpdateDate))
+        //      Scheema.updatePhotosWithTag(Database.lastUpdateDate); 
+        //   
+        // if(Database.countPhotosFromPhotoset !== Scheema.countPhotosFromPhotoset(Database.lastUpdateDate))
+        //      Scheema.updatePhotosFromPhotoset(Database.lastUpdateDate);
+
+        //          перевірка на завантаження нових фото
+        // Scheema.addNewPhotos(Database.lastUpdateDate);
+        //              виконує запит зі встановленим параметром min_upload_date:Database.lastUpdateDate,
+        //              додає фото, їх кількість плюсується до  countPhotosWithTag, countPhotosFromPhotoset відповідно
+        // встановлюємо Database.lastUpdateDate = new Date.now();
         const photos = new Coll.Dictionary<string, MarkedFlickrPhotos>();
         for await (const page of this.fetchAll(this.fetchPhotosByTag)) {
             for (const photo of page) {

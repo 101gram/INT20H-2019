@@ -39,24 +39,15 @@ export const Schema = new Mongoose.Schema({
 
 const Statics: PhotoStatics = {
     async updateDatabase() {
-        const photos = await Flickr.fetchAllUnited();
-        const emotionsPhotos = new Array<PhotoData>();
-        for await (const emotionPhoto of this.getEmotionsForPhotos(photos)) {
-            emotionsPhotos.push(emotionPhoto);
-        }
+                       // reuse already existing objects, add emotions field to them.
+        const photos = Vts.reinterpret<PhotoData[]>(await Flickr.fetchAllUnited());
+        const emotions = await Promise.all(photos.map(
+            photo => Facepp.getFacesEmotions(EP.photoToUrl(photo)))
+        );
+        emotions.forEach((emotion, i) => photos[i].emotions = emotion);
         await this.remove({});
         await this.insertMany(photos);
     },
-
-    async * getEmotionsForPhotos(photos) {
-        for (const photo of photos) {
-            Vts.reinterpret<PhotoData>(photo).emotions = await Facepp.getFacesEmotions(
-                EP.photoToUrl(photo)
-            );
-            yield Vts.reinterpret<PhotoData>(photo);
-        }
-    }
-
 };
 
 const Methods: PhotoMethods = {

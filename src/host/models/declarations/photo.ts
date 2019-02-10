@@ -1,5 +1,5 @@
 import * as Mongoose from 'mongoose';
-import { CrudPluginStatics } from '@modules/mongoose-plugins/crud';
+import { CrudPluginStatics } from '@modules/mongoose/plugins/crud';
 import { EP } from '@common/interfaces';
 /**
  * This model represents photos fetched via FlickrAPI by tag #int20h and 

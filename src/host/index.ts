@@ -4,12 +4,21 @@ import * as Path   from 'path';
 import * as Config from '@app/config';
 // import * as Utils  from '@modules/utils';
 import { router as apiRouter } from '@routes/api';
+import { apolloServer        } from '@routes/graphql';
 import Express from 'express';
 // import { Photo } from '@models/photo';
   
 const app = Express()
 
-.use(Express.static('./dist/'))
+.use(Express.static('./dist/'));
+
+apolloServer.applyMiddleware({
+    app,
+    path: '/graphql'
+});
+
+
+app
 .use('/api/v1', apiRouter)
 
 .get('*', (_req, res) => { 

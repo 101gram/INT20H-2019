@@ -13,7 +13,7 @@
     "build": "npm run clean && npm run build-host && npm run build-client",
     "clean": "rm -rf dist build",
     "dev": "npm-run-all --parallel watch:client watch:server",
-    "heroku-postbuild": "npm run build:prod",
+    "heroku-postbuild": "npm run build:prod && npm run docs",
     "watch:client": "webpack --config src/client/webpack.config.js --watch --mode development --progress",
     "watch:server": "nodemon",
     "start": "node build/host/index.js"

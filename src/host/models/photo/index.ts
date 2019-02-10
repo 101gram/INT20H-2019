@@ -1,12 +1,13 @@
 import Paginate from 'mongoose-paginate';
 import _        from 'lodash';
-import * as Mongoose from 'mongoose';
-import * as Vts      from 'vee-type-safe';
-import * as Config   from 'config';
-import { CrudPlugin     } from '@modules/mongoose-plugins/crud';
-import { FlickrAPI      } from '@modules/flickr-api';
-import { FaceppAPI      } from '@modules/facepp-api';
-import { EP } from '@common/interfaces';
+import * as Mongoose  from 'mongoose';
+import * as Vts       from 'vee-type-safe';
+import * as Config    from 'config';
+import { CrudPlugin } from '@modules/mongoose/plugins/crud';
+import { FlickrAPI  } from '@modules/flickr-api';
+import { FaceppAPI  } from '@modules/facepp-api';
+import { EP         } from '@common/interfaces';
+import { Paginator  } from '@modules/mongoose/utils/paginate';
 
 import { 
     PhotoMethods, PhotoStatics, PhotoDoc, PhotoModel, PhotoData
@@ -39,7 +40,7 @@ export const Schema = new Mongoose.Schema({
 
 const Statics: PhotoStatics = {
     async updateDatabase() {
-                       // reuse already existing objects, add emotions field to them.
+                       // reuse already existing objects, add `emotions` field to them.
         const photos = Vts.reinterpret<PhotoData[]>(await Flickr.fetchAllUnited());
         const emotions = await Promise.all(photos.map(
             photo => Facepp.getFacesEmotions(EP.photoToUrl(photo)))
@@ -61,5 +62,5 @@ Schema.plugin(CrudPlugin);
 Schema.plugin(Paginate);
 
 export const Photo = Mongoose.model<PhotoDoc, PhotoModel>('Photo', Schema);
-
+export const PhotoPaginator = new Paginator<PhotoData, PhotoDoc>({ model: Photo });
 

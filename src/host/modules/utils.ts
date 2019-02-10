@@ -123,3 +123,8 @@ export function limitExecRate<
     };
 }
  
+
+export function isPlainObject(suspect: unknown): suspect is Vts.BasicObject {
+    return Vts.isBasicObject(suspect) && 
+        Object.getPrototypeOf(suspect) === Object.prototype;
+}

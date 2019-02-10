@@ -1,0 +1,70 @@
+# Implementation detail
+scalar TypeMatchedScalar
+# ISO-8601 format compliant date-time string.
+scalar Date
+
+# Requires an integer within the range [1, +Infinity)
+directive @positiveInt          on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+# Requires an integer within the range [0, +Infinity)
+directive @zeroOrPositiveInt    on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# Root queries endpoint.
+type Query {
+    # Search for photos with different filters.
+    getPhotos(req: GetPhotosRequest!): GetPhotosResponse!
+}
+
+type GetPhotosResponse {
+    # Page of photos that satisfy input search limitations.
+    data: [Photo!]!
+    # Total amount of photos that may be queried for the given search limitations.
+    total: Int! @zeroOrPositiveInt
+}
+input GetPhotosRequest {
+    # Amount of photos per page.
+    limit:  Int! @positiveInt
+    # 0-based offset
+    offset: Int! @zeroOrPositiveInt
+    # Search query.
+    search: GetPhotosSearch
+    filter: GetPhotosFilter
+    # @TODO: sort
+}
+input GetPhotosFilter {
+    # prevails over `exclude`
+    include: GetPhotosFilterData
+    # inferior to `include`
+    exclude: GetPhotosFilterData
+}
+input GetPhotosFilterData {
+    title:     [String!]
+    tag:       Boolean
+    photoset:  Boolean
+    emotions:  [Emotion!]
+}
+input GetPhotosSearch {
+    title: String
+}
+
+type Photo {
+    title:     String!
+    id:        String!
+    secret:    String!
+    server:    String!
+    farm:      Int!
+    tag:       Boolean!
+    photoset:  Boolean!
+    emotions:  [Emotion!]!
+    # @TODO: last_update
+}
+
+# Possible emotions that detects face++ API.
+enum Emotion { 
+    sadness
+    neutral
+    disgust
+    anger
+    surprise
+    fear
+    happiness
+}

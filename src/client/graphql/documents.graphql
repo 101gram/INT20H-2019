@@ -1,0 +1,15 @@
+query queryPhotos($req: GetPhotosRequest!){
+    getPhotos(req: $req) {
+        total
+        data {
+            title
+            id
+            secret
+            server
+            farm
+            tag
+            photoset
+            emotions
+        }
+    }
+}

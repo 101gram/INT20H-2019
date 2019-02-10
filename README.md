@@ -16,7 +16,7 @@ This website was made as a test assignment for
 
 View `EXAMPLE_DOTENV.env` for an example.
 
-2.Install necessary dependencies
+2. Install necessary dependencies
 
 ```bash
 npm install

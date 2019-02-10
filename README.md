@@ -14,6 +14,8 @@ This website was made as a test assignment for
     * `FACEAPP_API_SECRET_0` - API secret from [Face++](https://www.faceplusplus.com/)
     * `DATABASE_URL` - running MongoDB instance url (either local or remote).
 
+View `EXAMPLE_DOTENV.env` for an example.
+
 2. Build project.
 
 ```bash

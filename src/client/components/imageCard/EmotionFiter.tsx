@@ -84,7 +84,7 @@ class EmotionFilter extends React.Component<Props> {
 
     renderSelectValue = (selected: SelectProps["value"]) => {
         const { classes } = this.props; 
-        const arr = selected as [];
+        const arr = selected as string[]; 
         return (
             <div className={classes.chips}>
                 {arr!.map(value => (
@@ -96,7 +96,6 @@ class EmotionFilter extends React.Component<Props> {
 
     render() {
         const { classes } = this.props;
-
         return (
             <div>
                 <Typography variant="h6" component="h6" className={classes.formLabel}>You can choose emotions to filter pictures by:</Typography>

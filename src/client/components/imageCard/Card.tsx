@@ -69,9 +69,7 @@ class ImageCard extends React.Component<Props> {
         );
     }
 
-    handleClick = () => {
-        this.props.cbGetSelectedPhoto(this.props.photo);
-    }
+    handleClick = () => void this.props.cbGetSelectedPhoto(this.props.photo);
 
     render() {
         const { classes, photo } = this.props;

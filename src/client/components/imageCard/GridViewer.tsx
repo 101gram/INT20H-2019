@@ -13,7 +13,7 @@ import { EP } from '@common/interfaces';
 import Typography from '@material-ui/core/Typography';
 import { withSnackbar, InjectedNotistackProps } from 'notistack';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { QueryPhotos } from '@graphql/index';
+import { QueryPhotos, Emotion } from '@graphql/index';
 
 const styles = ({ spacing, breakpoints}: Theme) => createStyles({
     layout: {
@@ -40,7 +40,7 @@ const styles = ({ spacing, breakpoints}: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles>, InjectedNotistackProps {
     photos: PhotosState;
-    getAllPhotos: Function;
+    getAllPhotos: (page: number, emotions: Emotion[]) => void;
     cbGetSelectedPhoto: (photo: QueryPhotos.Data) => void;   
 }
 
@@ -56,7 +56,11 @@ class ImageGridViewer extends React.Component<Props, State> {
     }
 
     static mapDispatchToProps(dispatch: FetchPhotosThunkDispatch) {
-        return { getAllPhotos: (page: number, emotions: EP.Emotion[]) => dispatch(fetchPhotos(page, emotions)) };
+        return { 
+            getAllPhotos: (page: number, emotions: EP.Emotion[]) => (
+                dispatch(fetchPhotos(page, emotions)) 
+            )
+        };
     }
 
     loadPage = (page: number) => {
@@ -66,7 +70,7 @@ class ImageGridViewer extends React.Component<Props, State> {
         });
     }
 
-    filterByEmotions = (emotions: string[]) => {
+    filterByEmotions = (emotions: Emotion[]) => {
         this.props.getAllPhotos(1, emotions);
         this.setState({
             currentPage: 1,
@@ -85,7 +89,8 @@ class ImageGridViewer extends React.Component<Props, State> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (this.props.photos.lastErrorDate !== 0 && prevProps.photos.lastErrorDate < this.props.photos.lastErrorDate) {
+        if (this.props.photos.lastErrorDate !== 0 && 
+            prevProps.photos.lastErrorDate < this.props.photos.lastErrorDate) {
             this.props.enqueueSnackbar(this.props.photos.lastError, { variant: 'error' });
         }
     }

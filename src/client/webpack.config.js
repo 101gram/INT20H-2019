@@ -91,7 +91,7 @@ module.exports = {
             filename: "[name].css",
             chunkFilename: "[id].css"
         })
-    ]
+    ],
 
     // When importing a module whose path matches one of the following, just
     // assume a corresponding global variable exists and use that instead.
@@ -103,6 +103,11 @@ module.exports = {
     // externals: {
     //     "react": "React",
     //     "react-dom": "ReactDOM"
+    // }
+    // optimization: {
+    //     splitChunks: {
+    //         chunks: 'all'
+    //     }
     // }
 };
 

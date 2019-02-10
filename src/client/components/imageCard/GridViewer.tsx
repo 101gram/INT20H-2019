@@ -10,7 +10,9 @@ import { ApplicationStore } from '@configs/configureReduxStore';
 import { fetchPhotos, FetchPhotosThunkDispatch } from '@actions/fetchPhotos';
 import EmotionFilter from '@components/imageCard/EmotionFiter';
 import { EP } from '@common/interfaces';
+import Typography from '@material-ui/core/Typography';
 import { withSnackbar, InjectedNotistackProps } from 'notistack';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const styles = ({ spacing, breakpoints}: Theme) => createStyles({
     layout: {
@@ -25,6 +27,12 @@ const styles = ({ spacing, breakpoints}: Theme) => createStyles({
     },
     cardGrid: {
         padding: `0 0 ${spacing.unit * 2}px 0`,
+    },
+    textInfo: {
+        marginBottom: 20
+    },
+    progress: {
+        marginTop: 20
     }
 });
 
@@ -93,13 +101,26 @@ class ImageGridViewer extends React.Component<Props, State> {
         }
     }
 
-    render() {
+    viewPhotos = () => {
         const { props: {classes}} = this;
-        const { props: {photos: {photosOnPage}}} = this;
         const { props: {photos}} = this;
-        return (
-            <React.Fragment>
-                <div className={classNames(classes.layout, classes.cardGrid)}>
+        const { props: {photos: {photosOnPage}}} = this;
+        if ((!photosOnPage || photosOnPage.length == 0) && photos.isFetching) {
+            return (
+                <Typography className={classes.textInfo} variant="display1" align="center" color="default" component="p">
+                        Loading photos...
+                    <LinearProgress color='secondary' className={classes.progress} />
+                </Typography>
+            );
+        } else if (!photosOnPage || photosOnPage.length == 0) {
+            return (
+                <Typography className={classes.textInfo} variant="display1"  align="center" color="default" component="p">
+                    There are no images
+                </Typography>
+            );
+        } else {
+            return (
+                <React.Fragment>
                     <EmotionFilter isDisabled={photos.isFetching} onChangeEmotions={this.handleChangeEmotions} />
                     <Grid container spacing={40}>
                         {photosOnPage.map((photo, index) => (
@@ -108,6 +129,17 @@ class ImageGridViewer extends React.Component<Props, State> {
                             </Grid>
                         ))} 
                     </Grid>
+            </React.Fragment>
+            );
+        }
+    }
+
+    render() {
+        const { props: {classes}} = this;
+        return (
+            <React.Fragment>
+                <div className={classNames(classes.layout, classes.cardGrid)}>
+                    {this.viewPhotos()}
                 </div>
                 <Paginator 
                     currentPage={this.props.photos.currentPage} 

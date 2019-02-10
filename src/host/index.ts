@@ -24,6 +24,7 @@ const app = Express()
 Mongoose.connect(Config.DatabaseUrl, { 
     useNewUrlParser:  true,
     keepAlive:        true, 
+    useCreateIndex:   true, 
     connectTimeoutMS: 30000 
 })
 .then(async () => { 

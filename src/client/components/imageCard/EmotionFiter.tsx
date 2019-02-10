@@ -34,7 +34,7 @@ const styles = ({ palette, spacing }: Theme) => createStyles({
         display: 'flex',
         alignItems: 'center', 
         justifyContent: 'center',
-        marginTop: 20
+        marginTop: -10
     },
     labelHelper: {
         position: 'initial'

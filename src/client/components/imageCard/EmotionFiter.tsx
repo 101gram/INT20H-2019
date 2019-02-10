@@ -53,16 +53,25 @@ const MenuProps = {
   },
 };
 
-  
+export const EmotionSmiles = {
+    'sadness': '☹ sadness',
+    'neutral': '',
+    'disgust': '',
+    'anger': '',
+    'surprise': '',
+    'fear': '',
+    'happiness': ''
+}; 
 
 export interface Props extends WithStyles<typeof styles> {
     onChangeEmotions:  (emotions: string[]) => void;
     isDisabled: boolean;
+    currentEmotions: string[];
 }
 
 class EmotionFilter extends React.Component<Props> {
     state = {
-        selectedEmotions: []
+        selectedEmotions: this.props.currentEmotions
     };
 
     handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

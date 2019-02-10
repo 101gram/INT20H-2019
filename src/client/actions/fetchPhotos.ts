@@ -1,14 +1,15 @@
-import Axios from 'axios';
-import * as HttpStatusCodes from 'http-status-codes';
-import * as Vts       from 'vee-type-safe';
 import { EP } from '@common/interfaces';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { IMAGES_PER_PAGE } from '@components/imageCard/Paginator';
+import ApolloClient from "apollo-boost";
+import { QueryPhotos } from '@app/graphql';
 
 export const FETCH_PHOTOS_REQUEST = 'FETCH_PHOTOS_REQUEST'; 
 export const FETCH_PHOTOS_SUCCESS = 'FETCH_PHOTOS_SUCCESS';
 export const FETCH_PHOTOS_FAILURE = 'FETCH_PHOTOS_FAILURE';
 
+const client = new ApolloClient();
+  
 export type PhotosState = {
     isFetching: boolean;
     currentPage: number;
@@ -16,7 +17,7 @@ export type PhotosState = {
     lastError: string;
     lastErrorDate: number;
     selectedEmotions: EP.Emotion[];
-    photosOnPage: EP.Photo[];
+    photosOnPage: QueryPhotos.Data[];
 };
 
 export const defaultPayload: PhotosState = {
@@ -38,28 +39,30 @@ type PhotosResult<TResult> = ThunkAction<TResult, PhotosState, undefined, Photos
 
 export type FetchPhotosThunkDispatch = ThunkDispatch<PhotosState, undefined, PhotosActions>;
 
-export function fetchPhotos(page: number, emotion: EP.Emotion[]): PhotosResult<void> {
+export function fetchPhotos(page: number, emotions: EP.Emotion[]): PhotosResult<void> {
     return async function(dispatch: FetchPhotosThunkDispatch) {
         dispatch({ 
             type: FETCH_PHOTOS_REQUEST,
             payload: { ...defaultPayload, isFetching: true }
         });
-        const queryParams: EP.Request = {
-            limit: IMAGES_PER_PAGE,
-            offset: (page - 1) * IMAGES_PER_PAGE,
-            emotion: emotion.length > 0 ? emotion.join(',') : null
-        };
         let result;
         try {
-            const response = await Axios.get(EP.Endpoint, { params: { ...queryParams } });
-            if (!response || response.status !== HttpStatusCodes.OK) {
-                throw new Error(response 
-                    ? response.statusText 
-                    : `Get null response on ${EP.Endpoint}`);
+            const response = await client.query<QueryPhotos.Query, QueryPhotos.Variables>({
+                variables: {
+                    req: {
+                        limit: IMAGES_PER_PAGE,
+                        offset: (page - 1) * IMAGES_PER_PAGE,
+                        filter: emotions.length ? {
+                            include: { emotions }
+                        } : undefined
+                    }
+                }, 
+                query: QueryPhotos.Document
+            });
+            if (!response || response.errors) {
+                throw new Error(response.networkStatus.toString());
             }
-            //console.log(response.data);
-            Vts.ensureMatch(response.data, EP.ResponseTD);
-            result = response.data as EP.Response;
+            result = response.data.getPhotos;
         } catch(e) {
             dispatch({ type: FETCH_PHOTOS_FAILURE, payload: { 
                 ...defaultPayload, 
@@ -74,8 +77,8 @@ export function fetchPhotos(page: number, emotion: EP.Emotion[]): PhotosResult<v
                 ...defaultPayload,
                 photosOnPage: result.data,
                 currentPage: page,
-                selectedEmotions: emotion,
-                allPages: result.total / IMAGES_PER_PAGE,
+                selectedEmotions: emotions,
+                allPages: Math.ceil(result.total / IMAGES_PER_PAGE),
                 countAllPhotos: result.total
             }
         });

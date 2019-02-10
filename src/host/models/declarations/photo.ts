@@ -13,6 +13,7 @@ export interface PhotoDataWithoutId {
     farm:      number;
     tag:       boolean;
     photoset:  boolean;
+    datetaken: Date;
     emotions:  EP.Emotion[];
 }
 export interface PhotoData extends PhotoDataWithoutId {

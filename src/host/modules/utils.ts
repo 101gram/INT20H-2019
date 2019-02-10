@@ -74,6 +74,7 @@ export function * pickRandomItems<T>(arr: T[], times: number[]) {
  * Awaits `routine()` and prints its execution time to the console.
  */
 export async function measurePerformance(routine: () => Promise<void>, functionName: string) {
+    Log.info('invoking ${functionName}');
     const before = Date.now();
     await routine();
     const after = Date.now();

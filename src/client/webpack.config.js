@@ -22,16 +22,17 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"],
+        extensions: [".ts", ".tsx", ".js",  '.mjs', ".json"],
         alias: { 
+            "@app":        relativePath("."),
             "@common":     relativePath("../common" ),
             "@components": relativePath("components"),
             "@reducers":   relativePath("reducers"  ),
             "@actions":    relativePath("actions"   ),
             "@theme":      relativePath("theme"     ),
             "@configs":    relativePath("configs"   ),
-            "@containers": relativePath("containers"),
-            "@services":   relativePath("services"  )
+            "@services":   relativePath("services"  ),
+            "@graphql":    relativePath("graphql"   )
         },
     },
 
@@ -43,11 +44,19 @@ module.exports = {
                 loader: "awesome-typescript-loader?configFileName=./src/client/tsconfig.json" 
             },
 
+            
+            {
+                type: 'javascript/auto',
+                test: /\.mjs$/,
+                use: []
+            },
+
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             { 
                 enforce: "pre", 
                 test: /\.js$/, 
-                loader: "source-map-loader" 
+                loader: "source-map-loader",
+                exclude: [/node_modules/, /build/],
             },
             
             {
@@ -55,6 +64,12 @@ module.exports = {
                 use: {
                     loader: "html-loader"
                 }
+            },
+
+            {
+                test: /\.(graphql|gql)$/,
+                exclude: /node_modules/,
+                loader: 'graphql-tag/loader',
             },
 
             {

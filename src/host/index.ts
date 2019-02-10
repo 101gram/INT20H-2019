@@ -1,16 +1,20 @@
+import Express  from 'express';
 import Mongoose from 'mongoose';
+import Morgan   from 'morgan';
 import * as Debug  from '@modules/debug';
 import * as Path   from 'path';
 import * as Config from '@app/config';
-// import * as Utils  from '@modules/utils';
+import * as Utils  from '@modules/utils';
+import { Photo               } from '@models/photo';
 import { router as apiRouter } from '@routes/api';
 import { apolloServer        } from '@routes/graphql';
-import Express from 'express';
-// import { Photo } from '@models/photo';
+
   
 const app = Express()
 
 .use(Express.static('./dist/'));
+
+app.use(Express.static('./assets/'));
 
 apolloServer.applyMiddleware({
     app,
@@ -19,6 +23,7 @@ apolloServer.applyMiddleware({
 
 
 app
+.use(Morgan('dev'))
 .use('/api/v1', apiRouter)
 
 .get('*', (_req, res) => { 
@@ -36,12 +41,15 @@ Mongoose.connect(Config.DatabaseUrl, {
     useCreateIndex:   true, 
     connectTimeoutMS: 30000 
 })
-.then(async () => { 
+.then(() => { 
     app.listen(
         Config.Port,
         () => Debug.Log.info(`🚀  Server is listening on port ${Config.Port}`)
     );
-    // await Utils.measurePerformance(() => Photo.updateDatabase(), 'updateDatabase()');
+    setInterval(
+        () => Utils.measurePerformance(() => Photo.updateDatabase(), 'updateDatabase()'),
+        Config.DatabaseUpdateInterval
+    );
 })
 .catch(err => {
     Debug.Log.error(err);

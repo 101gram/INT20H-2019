@@ -7,6 +7,6 @@ export const PhotoResolvers: GqlSchema.PhotoResolvers.Resolvers = {
 
 export const PhotoQueryResolvers: GqlSchema.QueryResolvers.Resolvers = {
     getPhotos: (_parent, { req }) => PhotoPaginator.paginate({
-        ...req, sort: { title: 'desc' }
+        ...req, sort: req.sort || { datetaken: 'desc' }
     }) as Promise<Paginated<GqlSchema.Photo>>
 };

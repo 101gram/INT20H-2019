@@ -44,10 +44,8 @@ export const router = Express.Router()
                 select: projection  
             }
         );
-        const jsonRes: EP.Response = {
+        res.json({
             total: page.total,
-            data:  page.docs as EP.Photo[]
-        };
-        
-        res.json(jsonRes);
+            data:  page.docs
+        });
     });

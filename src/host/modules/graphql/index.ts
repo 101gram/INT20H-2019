@@ -9,6 +9,8 @@ export interface GetPhotosRequest {
   search?: Maybe<GetPhotosSearch>;
 
   filter?: Maybe<GetPhotosFilter>;
+
+  sort?: Maybe<GetPhotosSort>;
 }
 
 export interface GetPhotosSearch {
@@ -31,6 +33,10 @@ export interface GetPhotosFilterData {
 
   emotions?: Maybe<Emotion[]>;
 }
+
+export interface GetPhotosSort {
+  datetaken: SortingOrder;
+}
 /** Possible emotions that detects face++ API. */
 export enum Emotion {
   Sadness = "sadness",
@@ -42,10 +48,15 @@ export enum Emotion {
   Happiness = "happiness"
 }
 
-/** Implementation detail */
-export type TypeMatchedScalar = never;
+export enum SortingOrder {
+  Asc = "asc",
+  Desc = "desc"
+}
 
 /** ISO-8601 format compliant date-time string. */
+
+/** Implementation detail */
+export type TypeMatchedScalar = never;
 
 // ====================================================
 // Scalars
@@ -84,6 +95,8 @@ export interface Photo {
   photoset: boolean;
 
   emotions: Emotion[];
+
+  datetaken: Date;
 }
 
 // ====================================================
@@ -210,6 +223,8 @@ export namespace PhotoResolvers {
     photoset?: PhotosetResolver<boolean, TypeParent, Context>;
 
     emotions?: EmotionsResolver<Emotion[], TypeParent, Context>;
+
+    datetaken?: DatetakenResolver<Date, TypeParent, Context>;
   }
 
   export type TitleResolver<
@@ -249,6 +264,11 @@ export namespace PhotoResolvers {
   > = Resolver<R, Parent, Context>;
   export type EmotionsResolver<
     R = Emotion[],
+    Parent = Photo,
+    Context = ResolveContext
+  > = Resolver<R, Parent, Context>;
+  export type DatetakenResolver<
+    R = Date,
     Parent = Photo,
     Context = ResolveContext
   > = Resolver<R, Parent, Context>;
@@ -297,20 +317,20 @@ export interface DeprecatedDirectiveArgs {
   reason?: string;
 }
 
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
+  name: "Date";
+}
 export interface TypeMatchedScalarScalarConfig
   extends GraphQLScalarTypeConfig<TypeMatchedScalar, any> {
   name: "TypeMatchedScalar";
-}
-export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
-  name: "Date";
 }
 
 export interface IResolvers<Context = ResolveContext> {
   Query?: QueryResolvers.Resolvers<Context>;
   GetPhotosResponse?: GetPhotosResponseResolvers.Resolvers<Context>;
   Photo?: PhotoResolvers.Resolvers<Context>;
-  TypeMatchedScalar?: GraphQLScalarType;
   Date?: GraphQLScalarType;
+  TypeMatchedScalar?: GraphQLScalarType;
 }
 
 export interface IDirectiveResolvers<Result> {

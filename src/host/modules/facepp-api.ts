@@ -3,7 +3,6 @@ import * as Vts     from 'vee-type-safe';
 import * as Config  from '@app/config';
 import * as Utils   from '@modules/utils';
 import * as Network from '@modules/network';
-import { Log } from '@modules/debug';
 import { EP  } from '@common/interfaces';
 
 interface Face { 
@@ -38,8 +37,12 @@ export class FaceppAPI {
     constructor(
         private readonly api_key:    string, 
         private readonly api_secret: string
-    ) {}
-    static totalInvoked = 0;
+    ) {
+        this.getFacesEmotions = Utils.limitExecRate(
+            FaceppAPI.prototype.getFacesEmotions,
+            1000 / Config.FacePP.QueryPerSecond
+        );
+    }
     async getFacesEmotions(imageUrl: string){
         const { faces } = await Network.postFormDataAndGetJson<FaceppResponse>({
             endpoint: 'https://api-us.faceplusplus.com/facepp/v3/detect',
@@ -51,7 +54,6 @@ export class FaceppAPI {
             },
             jsonTypedescr: FaceappResponseTD
         });
-        Log.info(`#${++FaceppAPI.totalInvoked} fetched emotion...}`);
         const emotions: EP.Emotion[] = [];
         for (const { attributes } of faces) {
             if (attributes != null) {
@@ -65,8 +67,3 @@ export class FaceppAPI {
         return emotions;
     }
 }
-
-FaceppAPI.prototype.getFacesEmotions = Utils.limitExecRate(
-    FaceppAPI.prototype.getFacesEmotions,
-    1000 / Config.FacePP.QueryPerSecond
-);

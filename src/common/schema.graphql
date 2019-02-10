@@ -28,7 +28,10 @@ input GetPhotosRequest {
     # Search query.
     search: GetPhotosSearch
     filter: GetPhotosFilter
-    # @TODO: sort
+    sort:   GetPhotosSort
+}
+input GetPhotosSort {
+    datetaken: SortingOrder!
 }
 input GetPhotosFilter {
     # prevails over `exclude`
@@ -55,6 +58,7 @@ type Photo {
     tag:       Boolean!
     photoset:  Boolean!
     emotions:  [Emotion!]!
+    datetaken: Date!
     # @TODO: last_update
 }
 
@@ -67,4 +71,9 @@ enum Emotion {
     surprise
     fear
     happiness
+}
+
+enum SortingOrder {
+    asc
+    desc
 }

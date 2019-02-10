@@ -6,15 +6,11 @@ export type Callback<TResult> = (err: unknown, result: Maybe<TResult>) => void;
 /*
 // USAGE
 const result = await (await fetch(EmotionsPhotos.Endpoint, { queryParams })).json();
-
-const mismatchInfo = Vts.mismatch(result, EmotionsPhotos.ResponseTD);
-if (mismatchInfo == null) {
-    throw new Vts.TypeMismatchError(mismatchInfo);
-    // or Vts.ensureMatch(result, EmotionsPhotos.ResponseTD)
-}
+Vts.ensureMatch(result, EmotionsPhotos.ResponseTD);
 const checked = result as EmotionsPhotos.Response;
 */
 
+// REST API interfaces
 export namespace EP { // EmotionsPhotos
 
     export enum Emotion {
@@ -33,17 +29,22 @@ export namespace EP { // EmotionsPhotos
 
     // GET request query params
     export interface Request {
-        offset:   number;
-        limit:    number;
-        emotion:  string | null; // coma delimited list of emotions g
+        offset:  number;
+        limit:   number;
+        emotion: string | null; // coma delimited list of emotions g
     }
 
-    export interface FlickrPhoto {
-        id:       string;
-        secret:   string;
-        server:   string;
-        farm:     number;
-        title:    string;
+    
+    export interface PhotoToUrlOptions {
+        id:        string;
+        secret:    string;
+        server:    string;
+        farm:      number;
+    }
+
+    export interface FlickrPhoto extends PhotoToUrlOptions {
+        title:     string;
+        datetaken: string;
     }
     export interface Photo extends FlickrPhoto {
         tag:      boolean;
@@ -51,15 +52,18 @@ export namespace EP { // EmotionsPhotos
     }
     // https://www.flickr.com/services/api/misc.urls.html
     export const enum PhotoSize {
-        _240   = '_m',   // small, 240 on longest side
         _75x75 = '_s',   // small square 75x75
         _100   = '_t',   // thumbnail, 100 on longest side
-        _500   = '',
+        _240   = '_m',   // small, 240 on longest side
         _320   = '_n',
+        _500   = '',
         _640   = '_z',   // medium 640, 640 on longest side
         _1024  = '_b'    // large, 1024 on longest side*
     }
-    export function photoToUrl({farm, server, id, secret}: Photo, size = PhotoSize._1024) {
+    export function photoToUrl(
+        {farm, server, id, secret}: PhotoToUrlOptions, 
+        size = PhotoSize._1024
+    ) {
         return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}${size}.jpg`;
     }
 
@@ -70,7 +74,8 @@ export namespace EP { // EmotionsPhotos
         farm:     'number',
         title:    'string',
         tag:      'boolean',
-        photoset: 'boolean'
+        photoset: 'boolean',
+        datetaken: isDateString
     };
     export interface Response {
         total:  number;
@@ -80,4 +85,8 @@ export namespace EP { // EmotionsPhotos
         total: Vts.isZeroOrPositiveInteger,
         data:  [PhotoTD]
     };
+}
+
+export function isDateString(suspect: unknown): suspect is string {
+    return typeof suspect === 'string' && !Number.isNaN(Date.parse(suspect));
 }

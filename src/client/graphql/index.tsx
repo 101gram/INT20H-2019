@@ -9,6 +9,8 @@ export interface GetPhotosRequest {
   search?: Maybe<GetPhotosSearch>;
 
   filter?: Maybe<GetPhotosFilter>;
+
+  sort?: Maybe<GetPhotosSort>;
 }
 
 export interface GetPhotosSearch {
@@ -31,6 +33,10 @@ export interface GetPhotosFilterData {
 
   emotions?: Maybe<Emotion[]>;
 }
+
+export interface GetPhotosSort {
+  datetaken: SortingOrder;
+}
 /** Possible emotions that detects face++ API. */
 export enum Emotion {
   Sadness = "sadness",
@@ -42,11 +48,16 @@ export enum Emotion {
   Happiness = "happiness"
 }
 
-/** Implementation detail */
-export type TypeMatchedScalar = never;
+export enum SortingOrder {
+  Asc = "asc",
+  Desc = "desc"
+}
 
 /** ISO-8601 format compliant date-time string. */
 export type Date = string;
+
+/** Implementation detail */
+export type TypeMatchedScalar = never;
 
 // ====================================================
 // Documents
@@ -89,6 +100,8 @@ export namespace QueryPhotos {
     photoset: boolean;
 
     emotions: Emotion[];
+
+    datetaken: string;
   };
 }
 
@@ -115,6 +128,7 @@ export namespace QueryPhotos {
           tag
           photoset
           emotions
+          datetaken
         }
       }
     }

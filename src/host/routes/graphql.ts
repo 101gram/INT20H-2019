@@ -15,8 +15,8 @@ const QueryResolvers: GqlSchema.QueryResolvers.Resolvers = {
 
 export const apolloServer = new Apollo.ApolloServer({
     playground: true,
-    typeDefs: Apollo.gql(Config.Gql.Schema),
     introspection: true,
+    typeDefs: Apollo.gql(Config.Gql.Schema),
     resolvers: {
         Query: QueryResolvers as Apollo.IResolverObject,
         Photo: PhotoResolvers as Apollo.IResolverObject,

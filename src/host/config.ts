@@ -12,8 +12,21 @@ export namespace Flickr {
 }
 
 export namespace FacePP {
-    export const ApiKey    = tryReadEnv('FACEPP_API_KEY');
-    export const ApiSecret = tryReadEnv('FACEPP_API_SECRET');
+    export interface APICredential {
+        api_key:    string;
+        api_secret: string;
+    }
+    export const APICredentials = new Array<APICredential>();
+
+    let i = 0;          
+    while (process.env[`FACEPP_API_KEY_${i}`   ] != null && 
+           process.env[`FACEPP_API_SECRET_${i}`] != null) {
+        APICredentials.push({
+            api_key:    process.env[`FACEPP_API_KEY_${i}`   ]!,
+            api_secret: process.env[`FACEPP_API_SECRET_${i}`]!
+        });
+        ++i;
+    }
     export const QueryPerSecond = 1; 
 }
 export namespace Gql {
@@ -24,7 +37,7 @@ export namespace Gql {
 
 export const Port        = tryReadEnv('PORT');
 export const DatabaseUrl = tryReadEnv('DATABASE_URL');
-
+export const DatabaseUpdateInterval = 300_000; // miliseconds
 
 function tryReadEnv(variableId: string, defaultVal?: string) {
     if (!(variableId in process.env)) {

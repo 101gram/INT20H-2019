@@ -4,7 +4,7 @@ import * as Debug   from '@modules/debug';
 import * as Config  from '@app/config';
 import * as Network from '@modules/network';
 import * as Coll    from 'typescript-collections';
-import { EP } from '@common/interfaces';
+import { EP, isDateString } from '@common/interfaces';
 
 interface PaginationParams {
     per_page:    number;
@@ -18,11 +18,12 @@ interface FlickrBasicJsonResponse {
 export import FlickrPhoto = EP.FlickrPhoto;
 
 const FlickrPhotoTD: Vts.TypeDescriptionOf<FlickrPhoto> = {
-    id:       'string',
-    secret:   'string',
-    server:   'string',
-    farm:     'number',
-    title:    'string'
+    id:        'string',
+    secret:    'string',
+    server:    'string',
+    farm:      'number',
+    title:     'string',
+    datetaken: isDateString
 };
 
 interface FlickrPhotosetResponse extends FlickrBasicJsonResponse {
@@ -34,15 +35,15 @@ interface FlickrPhotosetResponse extends FlickrBasicJsonResponse {
 }
 const FlickrPhotosetsResponseTD: Vts.TypeDescriptionOf<FlickrPhotosetResponse> = {
     photoset: Vts.optional({
-        photo:     [FlickrPhotoTD],
-        total:     Vts.isZeroOrPositiveInteger
+        photo: [FlickrPhotoTD],
+        total: Vts.isZeroOrPositiveInteger
     }),
     stat: 'string'
 };
 
 interface FlickrPhotosSearchResponse extends FlickrBasicJsonResponse {
     photos?: {
-        total: string;       // stringified integer indeed
+        total: string;       // stringified integer indeed (Flickr API bug)
         photo: FlickrPhoto[];
         [key: string]: unknown;
     };
@@ -50,7 +51,7 @@ interface FlickrPhotosSearchResponse extends FlickrBasicJsonResponse {
 const FlickrPhotosSearchResponseTD: Vts.TypeDescriptionOf<FlickrPhotosSearchResponse> = {
     photos: Vts.optional({
         photo: [FlickrPhotoTD],
-        total: () => true, // check that this field at least exits
+        total: () => true, // check that this field at least exists, API bug ~~^
     }),
     stat: 'string'
 };
@@ -100,38 +101,6 @@ export class FlickrAPI {
     }
 
     async fetchAllUnited() {
-        //додати 3 поля lastUpdateDate, countPhotosWithTag, countPhotosFromPhotoset
-
-        //                  нові функції 
-
-        // getCountPhotosWithTag(date: lastUpdateDate) - отримує кількість фото з тегом до дати останнього оновлення
-        // у параметри запиту max_upload_date: lastUpdateDate
-
-        // getCountPhotosFromPhotoset(date: lastUpdateDate) - отримує кількість фото з альбому до дати останнього оновлення
-        // у параметри запиту max_upload_date: lastUpdateDate
-
-        // updatePhotosFromPhotoset(date: lastUpdateDate);
-        //                      у параметри запиту max_upload_date: lastUpdateDate
-        //                   - видаляє старі, завантажує нові фото, установлює значення Database.countPhotosFromPhotoset
-
-        //updatePhotosWithTag(date: lastUpdateDate); 
-        //                      у параметри запиту max_upload_date: lastUpdateDate
-        //                    - видаляє старі, завантажує нові фото, установлює значення Database.countPhotosWithTag
-
-        // у функції updateDatabase() /src/host/models/photo.ts
-
-        //      спочатку перевірка на те, чи не видаляли старі фото
-        // if(Database.countPhotosWithTag !== Scheema.countPhotosWithTag(Database.lastUpdateDate))
-        //      Scheema.updatePhotosWithTag(Database.lastUpdateDate); 
-        //   
-        // if(Database.countPhotosFromPhotoset !== Scheema.countPhotosFromPhotoset(Database.lastUpdateDate))
-        //      Scheema.updatePhotosFromPhotoset(Database.lastUpdateDate);
-
-        //          перевірка на завантаження нових фото
-        // Scheema.addNewPhotos(Database.lastUpdateDate);
-        //              виконує запит зі встановленим параметром min_upload_date:Database.lastUpdateDate,
-        //              додає фото, їх кількість плюсується до  countPhotosWithTag, countPhotosFromPhotoset відповідно
-        // встановлюємо Database.lastUpdateDate = new Date.now();
         const photos = new Coll.Dictionary<string, MarkedFlickrPhotos>();
         for await (const page of this.fetchAll(this.fetchPhotosByTag)) {
             for (const photo of page) {
@@ -187,8 +156,9 @@ export class FlickrAPI {
         const response = await this.fetchJson<FlickrPhotosSearchResponse>({
                 ...paginationParams,
                 method:  'flickr.photos.search',
-                tags:    `${Config.Flickr.TargetPhotoTag}`,
-                media:   'photos'
+                media:   'photos',
+                extras:  'date_taken',
+                tags:    `${Config.Flickr.TargetPhotoTag}`
             },
             FlickrPhotosSearchResponseTD
         );
@@ -201,7 +171,9 @@ export class FlickrAPI {
             total = parseInt(response.photos!.total, 10);
         }
         return { 
-            total, photos: response.photos!.photo 
+            total, 
+            photos: response.photos!.photo.map(photo => Vts.takeFromKeys(photo, FlickrPhotoTD))
+
         };
     }
 
@@ -232,8 +204,9 @@ export class FlickrAPI {
                 ...paginationParams,
                 method:        'flickr.photosets.getPhotos',
                 media:         'photos',
+                extras:        'date_taken',
                 photoset_id:   Config.Flickr.TargetPhotosetId,
-                user_id:       Config.Flickr.TargetUserId,
+                user_id:       Config.Flickr.TargetUserId
             },
             FlickrPhotosetsResponseTD
         );
@@ -241,7 +214,7 @@ export class FlickrAPI {
         Vts.ensureMatch(response.photoset, Vts.isBasicObject);
         return {
             total:  response.photoset!.total,
-            photos: response.photoset!.photo
+            photos: response.photoset!.photo.map(photo => Vts.takeFromKeys(photo, FlickrPhotoTD))
         };
     }
 

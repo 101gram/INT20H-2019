@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import { EP } from '@common/interfaces';
+//import { EP } from '@common/interfaces';
 import ImageGridViewer from '@components/imageCard/GridViewer';
 import ImageModal from '@components/imageViewer/ImageModal';
 import MainInformation from '@components/imageViewer/MainInformation';
+import { QueryPhotos } from '@graphql/index';
 
 const styles = ({  spacing }: Theme) => createStyles({
     icon: {
@@ -24,7 +25,7 @@ const styles = ({  spacing }: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles> {}
 
 interface State {
-    currentPhoto: EP.Photo | null;
+    currentPhoto: QueryPhotos.Data | null;
 }
 
 class Main extends React.Component<Props, State> {
@@ -32,7 +33,7 @@ class Main extends React.Component<Props, State> {
         currentPhoto: null
     };
 
-    setCurrentPhoto = (photo: EP.Photo) => {
+    setCurrentPhoto = (photo: QueryPhotos.Data) => {
         this.setState({ currentPhoto: photo });
     }
 

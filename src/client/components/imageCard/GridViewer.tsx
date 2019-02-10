@@ -13,6 +13,7 @@ import { EP } from '@common/interfaces';
 import Typography from '@material-ui/core/Typography';
 import { withSnackbar, InjectedNotistackProps } from 'notistack';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { QueryPhotos } from '@graphql/index';
 
 const styles = ({ spacing, breakpoints}: Theme) => createStyles({
     layout: {
@@ -40,11 +41,11 @@ const styles = ({ spacing, breakpoints}: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles>, InjectedNotistackProps {
     photos: PhotosState;
     getAllPhotos: Function;
-    cbGetSelectedPhoto: (photo: EP.Photo) => void;   
+    cbGetSelectedPhoto: (photo: QueryPhotos.Data) => void;   
 }
 
 interface State {
-    currentPhoto: EP.Photo | null;
+    currentPhoto: QueryPhotos.Data | null;
     currentPage: number;
     currentEmotions: string[];
 }
@@ -104,24 +105,30 @@ class ImageGridViewer extends React.Component<Props, State> {
     viewPhotos = () => {
         const { props: {classes}} = this;
         const { props: {photos}} = this;
+        const { currentEmotions } = this.state;
         const { props: {photos: {photosOnPage}}} = this;
-        if ((!photosOnPage || photosOnPage.length == 0) && photos.isFetching) {
+        if ((!photosOnPage || photosOnPage.length == 0) && photos.isFetching && !currentEmotions.length) {
             return (
-                <Typography className={classes.textInfo} variant="display1" align="center" color="default" component="p">
+                <React.Fragment>
+                    <Typography className={classes.textInfo} variant="h4" align="center" color="default" component="p">
                         Loading photos...
+                    </Typography>
                     <LinearProgress color='secondary' className={classes.progress} />
-                </Typography>
+                </React.Fragment>
             );
         } else if (!photosOnPage || photosOnPage.length == 0) {
             return (
-                <Typography className={classes.textInfo} variant="display1"  align="center" color="default" component="p">
-                    There are no images
-                </Typography>
+                <React.Fragment>
+                    <EmotionFilter currentEmotions={this.state.currentEmotions} isDisabled={photos.isFetching} onChangeEmotions={this.handleChangeEmotions} />
+                    <Typography className={classes.textInfo} variant="h5"  align="center" color="default" component="p">
+                        There are no images
+                    </Typography>
+                </React.Fragment>
             );
         } else {
             return (
                 <React.Fragment>
-                    <EmotionFilter isDisabled={photos.isFetching} onChangeEmotions={this.handleChangeEmotions} />
+                    <EmotionFilter currentEmotions={this.state.currentEmotions} isDisabled={photos.isFetching} onChangeEmotions={this.handleChangeEmotions} />
                     <Grid container spacing={40}>
                         {photosOnPage.map((photo, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4} lg={3}>

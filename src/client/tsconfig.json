@@ -2,7 +2,7 @@
     "compilerOptions": {
         "outDir": "./../dist/",
         "jsx": "react",
-        "target": "es5",
+        "target": "es2015",
         "lib": ["esnext", "dom"],
         "module": "commonjs",
         "moduleResolution": "node",
@@ -15,11 +15,10 @@
             "@components/*":   [ "components/*"   ],
             "@services/*":     [ "services/*"     ],
             "@configs/*":      [ "configs/*"      ],
-            "@containers/*":   [ "containers/*"   ],
             "@modules/*":      [ "modules/*"      ],
             "@theme/*":        [ "theme/*"        ],
             "@app/*":          [ "./*"            ],
-
+            "@graphql/*":      [ "graphql/*"      ],
             "*": ["./../common/ambient-declarations/*", "*"]
         },
         "noImplicitAny":   true,

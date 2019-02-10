@@ -15,7 +15,9 @@ import {
 export * from '@models/declarations/photo';
 
 const Flickr = new FlickrAPI(Config.Flickr.ApiKey);
-const Facepp = new FaceppAPI(Config.FacePP.ApiKey, Config.FacePP.ApiSecret);
+const Facepps = Config.FacePP.APICredentials.map(
+    cred => new FaceppAPI(cred.api_key, cred.api_secret)
+);
 
 export const Schema = new Mongoose.Schema({
         title:     { type: String,   required: true },
@@ -25,6 +27,7 @@ export const Schema = new Mongoose.Schema({
         farm:      { type: Number,   required: true },
         tag:       { type: Boolean,  required: true, default: false }, 
         photoset:  { type: Boolean,  required: true, default: false }, 
+        datetaken: { type: Date,     required: true },
         emotions:  {
             type: [{ 
                 type:     String,  
@@ -43,8 +46,8 @@ const Statics: PhotoStatics = {
                        // reuse already existing objects, add `emotions` field to them.
         const photos = Vts.reinterpret<PhotoData[]>(await Flickr.fetchAllUnited());
         const emotions = await Promise.all(photos.map(
-            photo => Facepp.getFacesEmotions(EP.photoToUrl(photo)))
-        );
+            (photo, i) => Facepps[i % Facepps.length].getFacesEmotions(EP.photoToUrl(photo))
+        ));
         emotions.forEach((emotion, i) => photos[i].emotions = emotion);
         await this.remove({});
         await this.insertMany(photos);

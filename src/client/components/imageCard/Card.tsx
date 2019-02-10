@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Info from '@material-ui/icons/InfoOutlined';
 import PhotoAlbum from '@material-ui/icons/PhotoAlbumOutlined';
 import { EP } from '@common/interfaces';
+import { QueryPhotos } from '@graphql/index';
 
 // const descriptionHeight = 50;
 const styles = ({ palette }: Theme) => createStyles({
@@ -41,8 +42,8 @@ const styles = ({ palette }: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-    photo: EP.Photo;
-    cbGetSelectedPhoto: (photo: EP.Photo) => void;
+    photo: QueryPhotos.Data;
+    cbGetSelectedPhoto: (photo: QueryPhotos.Data) => void; 
 }
 
 class ImageCard extends React.Component<Props> {
@@ -55,7 +56,7 @@ class ImageCard extends React.Component<Props> {
                 </Typography>
             </div>
         );
-    }
+    } 
 
     renderTag(clasIcon: string) {
         return (
@@ -68,7 +69,7 @@ class ImageCard extends React.Component<Props> {
         );
     }
 
-    handleClick = (_event: React.MouseEvent<HTMLElement>) => {
+    handleClick = () => {
         this.props.cbGetSelectedPhoto(this.props.photo);
     }
 
@@ -93,14 +94,6 @@ class ImageCard extends React.Component<Props> {
                         {photo.photoset && this.renderAlbum()}
                     </div>
                 </CardContent>
-                {/* <CardActions>
-                    <Button size="small" color="primary">
-                        ViewfromAlbum
-                    </Button>
-                    <Button size="small" color="primary">
-                        Edit
-                    </Button>
-                </CardActions> */}
             </Card>
         );
     }

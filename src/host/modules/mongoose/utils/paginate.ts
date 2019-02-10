@@ -157,7 +157,7 @@ export class Paginator<
         }: PublicPaginateOptions<TPublicFields>,
         privateOts?: Vts.Maybe<PrivatePaginateOptions<TDocData>>
     ): Promise<Paginated<TDoc>> {
-        Vts.ensureMatch(offset, Vts.isPositiveInteger);
+        Vts.ensureMatch(offset, Vts.isZeroOrPositiveInteger);
         Vts.ensureMatch(limit,  Vts.isZeroOrPositiveInteger);
     
         const mongoSearch = !search ? {} : 
@@ -166,25 +166,37 @@ export class Paginator<
             ));
         
         const mongoExcludeFilter = !filter || !filter.exclude ? null :
-            _.transform(filter.exclude, this.transformQueryObj(
-                value => ({ $nin: _.castArray(value) })
-            ));
+            _.transform(filter.exclude, this.transformQueryObj((value, key ) => (
+                this.model.schema.path(key) instanceof Mongoose.Schema.Types.Array
+                ? { $not: { $elemMatch: { $in: _.castArray(value) } } }
+                : { $nin: _.castArray(value) }
+            )));
             
         const mongoIncludeFilter = !filter || !filter.include ? null :
-            _.transform(filter.include, this.transformQueryObj(
-                value => Array.isArray(value) ? { $in: value } : value
+            _.transform(filter.include, this.transformQueryObj((value, key) => (
+                    this.model.schema.path(key) instanceof Mongoose.Schema.Types.Array
+                    ? { $all: _.castArray(value) }
+                    : Array.isArray(value) ? { $in: value } : value
+                )
             ));
 
         const mongoSort = _.transform(sort, this.transformQueryObj(
             Paginator.checkSortValue
         ));
 
+        const mongoFilter = (
+            mongoExcludeFilter == null ?
+            mongoIncludeFilter         :
+            mongoIncludeFilter == null ?
+            mongoExcludeFilter         : 
+            { $and: [mongoIncludeFilter, mongoExcludeFilter] }
+        );
+
         const docsPage = await this.model.paginate(
             // tslint:disable-next-line:prefer-object-spread
             Object.assign(
                 mongoSearch, 
-                mongoExcludeFilter, 
-                mongoIncludeFilter,
+                mongoFilter,
                 privateOts && privateOts.filter
             ),
             { offset, limit, sort: mongoSort }
@@ -196,7 +208,7 @@ export class Paginator<
     }
 
     private transformQueryObj(
-        transformValue: (value: unknown) => unknown
+        transformValue: (value: unknown, schemaKey: string) => unknown
     ): _.MemoVoidDictionaryIterator<unknown, Vts.BasicObject> {
         return ((result, value, key) => {
             key = this.mapKey(key);
@@ -204,7 +216,7 @@ export class Paginator<
                 throw new Error(`Invalid query key ${key}`);
             }
             if (!this.isRequired(key) || value != null) {
-                result[key] = transformValue(value);
+                result[key] = transformValue(value, key);
             }
             return result;
         });

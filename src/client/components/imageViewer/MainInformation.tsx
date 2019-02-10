@@ -4,10 +4,8 @@ import Typography from '@material-ui/core/Typography';
 
 
 const styles = ({ spacing }: Theme) => createStyles({
-    heroUnit: {
-      backgroundColor: "inherit"//palette.background.paper,
-    },
-    heroContent: {
+    content: { 
+    backgroundColor: "inherit",//palette.background.paper,
       maxWidth: 600,
       margin: '0 auto',
       padding: `${spacing.unit * 8}px 0 ${spacing.unit * 6}px`,
@@ -20,17 +18,16 @@ export interface Props extends WithStyles<typeof styles> {
 class MainInformation extends React.Component<Props>{
     render() {
         const { classes } = this.props;
-        return(
-            <div className={classes.heroUnit}>
-                <div className={classes.heroContent}>
-                    <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                        Emotion picker
-                    </Typography>
-                    <Typography variant="h6" align="center" color="textSecondary" paragraph>
-                        Welcome everyone! Our site allows you to get pictures, which are related to INT20H-2019 from Flickr and to sort
-                        them by emotions on people's faces. Have a great fun using it!
-                    </Typography>
-                </div>
+        return( 
+            <div className={classes.content}>
+                <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                    Emotion picker
+                </Typography>
+                <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                    Welcome everyone! Our site allows you to get pictures, 
+                    which are related to INT20H-2019 from Flickr and to sort
+                    them by emotions on people's faces. Have a great fun using it!
+                </Typography>
             </div>
         );
     }

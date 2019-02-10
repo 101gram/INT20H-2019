@@ -20,7 +20,7 @@ const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyl
         },
         backgroundColor: palette.background.paper,
         boxShadow: shadows[5],
-        padding: spacing.unit * 4,
+        padding: 0,
         outline: 'none',
     },
     card: {
@@ -59,8 +59,9 @@ const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyl
     },
     image: {
         objectFit: "cover",
-        width: '100%',
-        height: 'auto'
+        maxWidth: '100%',
+        height: 'auto',
+        maxHeight: "100%"
     },
     heroContent: {
         maxWidth: 1000,

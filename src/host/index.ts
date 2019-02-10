@@ -7,10 +7,8 @@ import { router as apiRouter } from '@routes/api';
 import { apolloServer        } from '@routes/graphql';
 import Express from 'express';
 // import { Photo } from '@models/photo';
-//import * as BodyParser from 'body-parser';
   
 const app = Express()
-//app.use(BodyParser.json());
 
 .use(Express.static('./dist/'));
 
@@ -35,6 +33,7 @@ app
 Mongoose.connect(Config.DatabaseUrl, { 
     useNewUrlParser:  true,
     keepAlive:        true, 
+    useCreateIndex:   true, 
     connectTimeoutMS: 30000 
 })
 .then(async () => { 

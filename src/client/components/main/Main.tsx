@@ -37,20 +37,18 @@ class Main extends React.Component<Props, State> {
         this.setState({ currentPhoto: photo });
     }
 
-    unsetCurrentPhoto = () => {
+    unsetCurrentPhoto = () => { 
         this.setState({ currentPhoto: null });
     }
 
     render() {
-       // const { classes } = this.props;
         return (
             <main>
-                {/* <MediaControlCard 
-                    isDisabled={this.state.currentPhoto === null} 
+                <ImageModal 
+                    cbModalClosed={this.unsetCurrentPhoto} 
                     currentPhoto={this.state.currentPhoto}
-                /> */}
-                <ImageModal cbModalClosed={this.unsetCurrentPhoto} currentPhoto={this.state.currentPhoto}/>
-                <MainInformation />
+                />
+                <MainInformation/>
                 <ImageGridViewer cbGetSelectedPhoto={this.setCurrentPhoto}/>
             </main>
         );

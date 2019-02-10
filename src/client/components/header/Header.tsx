@@ -27,7 +27,7 @@ const styles = ({ breakpoints}: Theme) => createStyles({
     button: {
         color: "white",
         marginLeft: 10,
-        [breakpoints.up('sm')]: {
+        [breakpoints.down('sm')]: {
             fontSize: '0.605rem'
         },
     }

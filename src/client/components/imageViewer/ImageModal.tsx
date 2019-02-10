@@ -8,13 +8,14 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { QueryPhotos } from '@graphql/index';
 import * as Moment from 'moment';
+import red from '@material-ui/core/colors/red';
 
 const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyles({
     paper: {
         position: 'absolute',
         [breakpoints.between('xs', 'md')]: {
             width: "80%",
-            height: "50%",
+            height: "60%",
           },
         [breakpoints.up('md')]: {
             width: spacing.unit * 120,
@@ -41,6 +42,7 @@ const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyl
         [breakpoints.up('sm')]: {
             width: '30%'
         },
+        overflow: "scroll"
     },
     content: {
         flex: '1 0 auto',
@@ -75,10 +77,14 @@ const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyl
     heroUnit: {
         backgroundColor: 'inherit'
     },
-    button: {
+    buttonContainer: {
         display: 'flex',
         justifyContent: 'flex-end',
         marginTop: 'auto'
+    },
+    button: {
+        backgroundColor: red[500],
+        color: "white"
     },
     info: {
         flexGrow: 1,
@@ -105,16 +111,14 @@ class ImageModal extends React.Component<Props>{
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, currentPhoto } = this.props;
 
-        if(this.props.currentPhoto === null){
+        if(currentPhoto == null){
             return null;
         }
 
-        const { currentPhoto } = this.props;
-
         return (
-            <div>
+            <React.Fragment>
                 <Modal
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
@@ -122,32 +126,46 @@ class ImageModal extends React.Component<Props>{
                     onClose={this.handleClose}
                 >
                     <div style={MODAL_STYLE} className={classes.paper}>
-                        <Card className={classes.card}>
-                            <div className={classes.cover}>
-                                <img className={classes.image} src={EP.photoToUrl(currentPhoto)}/>
-                            </div>
-                            <div className={classes.details}>
-                                <CardContent className={classes.content}>
-                                    <div>    
-                                        <Typography variant="h3" color="default">
-                                            {currentPhoto.title}
-                                        </Typography>
-                                        <Typography variant="h5" color="default">
-                                            Emotions: {[...new Set(currentPhoto.emotions)].join(", ")}
-                                        </Typography>
-                                        <Typography variant="h6" color="default">
-                                            Date the photo was taken: {Moment(Date.parse(currentPhoto.datetaken)).format('MMMM Do YYYY, h:mm:ss a')}
-                                        </Typography>
-                                    </div>
-                                    <div className={classes.button}>
-                                        <Button color="secondary" onClick={this.handleClose}>Close</Button>
-                                    </div>
-                                </CardContent>
-                            </div>
-                        </Card>
+                    <Card className={classes.card}>
+                        <div className={classes.cover}>
+                            <img 
+                                className={classes.image} 
+                                src={EP.photoToUrl(currentPhoto)}
+                            />
+                        </div>
+                        <div className={classes.details}>
+                            <CardContent className={classes.content}>
+                                <div>    
+                                    <Typography variant="h3" color="default">
+                                        {currentPhoto.title}
+                                    </Typography>
+                                    <Typography variant="h6" color="default">
+                                        <strong>Emotions</strong>: {
+                                            [...new Set(currentPhoto.emotions)].join(", ")
+                                        }
+                                    </Typography>
+                                    <Typography variant="h6" color="default">
+                                        <strong>Date</strong>: {
+                                            Moment(Date.parse(currentPhoto.datetaken))
+                                                .format('MMMM Do YYYY, h:mm:ss a')
+                                        }
+                                    </Typography>
+                                </div>
+                                <div className={classes.buttonContainer}>
+                                    <Button 
+                                        className={classes.button}
+                                        variant="contained"
+                                        onClick={this.handleClose}
+                                    >
+                                        Close
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </div>
+                    </Card>
                     </div>
                 </Modal>
-            </div>
+            </React.Fragment>
         );
     }
 }

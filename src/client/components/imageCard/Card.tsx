@@ -74,7 +74,10 @@ class ImageCard extends React.Component<Props> {
     render() {
         const { classes, photo } = this.props;
         return (
-            <Card onClick={this.handleClick} className={classNames(classes.card, "imageCard")}>
+            <Card 
+                onClick={this.handleClick} 
+                className={classNames(classes.card, "imageCard")}
+            >
                 <CardMedia
                     className={classes.cardMedia}
                     image={EP.photoToUrl(photo, EP.PhotoSize._320)}

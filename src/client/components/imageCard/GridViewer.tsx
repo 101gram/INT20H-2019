@@ -57,7 +57,7 @@ class ImageGridViewer extends React.Component<Props, State> {
 
     static mapDispatchToProps(dispatch: FetchPhotosThunkDispatch) {
         return { 
-            getAllPhotos: (page: number, emotions: EP.Emotion[]) => (
+            getAllPhotos: (page: number, emotions: Emotion[]) => (
                 dispatch(fetchPhotos(page, emotions)) 
             )
         };
@@ -94,7 +94,7 @@ class ImageGridViewer extends React.Component<Props, State> {
             this.props.enqueueSnackbar(this.props.photos.lastError, { variant: 'error' });
         }
     }
-
+    
     handleClickNavigation = (_e: object, _offset: number, page: number) => {
         if (!this.props.photos.isFetching) {
             this.loadPage(page);
@@ -108,14 +108,21 @@ class ImageGridViewer extends React.Component<Props, State> {
     }
 
     viewPhotos = () => {
-        const { props: {classes}} = this;
-        const { props: {photos}} = this;
-        const { currentEmotions } = this.state;
-        const { props: {photos: {photosOnPage}}} = this;
-        if ((!photosOnPage || photosOnPage.length == 0) && photos.isFetching && !currentEmotions.length) {
+        const { props: {classes, photos}, state: {currentEmotions}} = this;
+        const { photosOnPage } = photos;
+        if ((!photosOnPage || photosOnPage.length == 0) && 
+            photos.isFetching                           &&
+            !currentEmotions.length
+        ) {
             return (
                 <React.Fragment>
-                    <Typography className={classes.textInfo} variant="h4" align="center" color="default" component="p">
+                    <Typography 
+                        className={classes.textInfo} 
+                        variant="h4" 
+                        align="center" 
+                        color="default" 
+                        component="p"
+                    >
                         Loading photos...
                     </Typography>
                     <LinearProgress color='secondary' className={classes.progress} />
@@ -124,8 +131,18 @@ class ImageGridViewer extends React.Component<Props, State> {
         } else if (!photosOnPage || photosOnPage.length == 0) {
             return (
                 <React.Fragment>
-                    <EmotionFilter currentEmotions={this.state.currentEmotions} isDisabled={photos.isFetching} onChangeEmotions={this.handleChangeEmotions} />
-                    <Typography className={classes.textInfo} variant="h5"  align="center" color="default" component="p">
+                    <EmotionFilter 
+                        currentEmotions={this.state.currentEmotions} 
+                        isDisabled={photos.isFetching} 
+                        onChangeEmotions={this.handleChangeEmotions} 
+                    />
+                    <Typography 
+                        className={classes.textInfo} 
+                        variant="h5"  
+                        align="center" 
+                        color="default" 
+                        component="p"
+                    >
                         There are no images
                     </Typography>
                 </React.Fragment>
@@ -133,11 +150,18 @@ class ImageGridViewer extends React.Component<Props, State> {
         } else {
             return (
                 <React.Fragment>
-                    <EmotionFilter currentEmotions={this.state.currentEmotions} isDisabled={photos.isFetching} onChangeEmotions={this.handleChangeEmotions} />
+                    <EmotionFilter 
+                        currentEmotions={this.state.currentEmotions} 
+                        isDisabled={photos.isFetching} 
+                        onChangeEmotions={this.handleChangeEmotions} 
+                    />
                     <Grid container spacing={40}>
                         {photosOnPage.map((photo, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                                <ImageCard photo={photo} cbGetSelectedPhoto={this.props.cbGetSelectedPhoto} />
+                                <ImageCard 
+                                    photo={photo} 
+                                    cbGetSelectedPhoto={this.props.cbGetSelectedPhoto} 
+                                />
                             </Grid>
                         ))} 
                     </Grid>
@@ -164,4 +188,8 @@ class ImageGridViewer extends React.Component<Props, State> {
     }
 }
 
-export default withStyles(styles)(connect(ImageGridViewer.mapStateToProps, ImageGridViewer.mapDispatchToProps)(withSnackbar(ImageGridViewer)));
+export default withStyles(styles)(
+    connect(ImageGridViewer.mapStateToProps, ImageGridViewer.mapDispatchToProps)(
+        withSnackbar(ImageGridViewer)
+    )
+);

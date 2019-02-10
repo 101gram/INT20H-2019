@@ -28,26 +28,15 @@ export interface Props extends WithStyles<typeof styles>, WithWidthProps {
 }
 
 class Paginator extends React.Component<Props> {
-
-    handleChange = (_event: any, value: any) => {
-        this.setState({ value });
-    }
-
+    
     getText(currentPage: number, total: number, offset: number) {
-        if (currentPage * IMAGES_PER_PAGE > total && total - offset === 1) {
-            return 'image was';
-        } else {
-            return 'images were';
-        }
+        return (currentPage * IMAGES_PER_PAGE > total && total - offset === 1)
+            ? 'image was'
+            : 'images were';
+
     }
 
-    getSizePaginator = () => {
-        if (this.props.width == 'xs') {
-            return 'medium';
-        } else {
-            return 'large';
-        }
-    }
+    getSizePaginator = () => this.props.width == 'xs' ? 'medium' : 'large';
 
     render() {
         const { classes } = this.props;
@@ -56,8 +45,15 @@ class Paginator extends React.Component<Props> {
         if (total === 0) return <div />;
         return (
             <React.Fragment>
-                <Typography className={classnames("m-y", classes.description)} variant="subtitle1" align="center" color="default" paragraph>
-                    {currentPage * IMAGES_PER_PAGE > total ? total - offset : IMAGES_PER_PAGE} {this.getText(currentPage, total, offset)} viewed on this page from {total} avaliable.<br/>
+                <Typography 
+                    className={classnames("m-y", classes.description)} 
+                    variant="subtitle1" 
+                    align="center" 
+                    color="default" 
+                    paragraph
+                >
+                    {currentPage * IMAGES_PER_PAGE > total ? total - offset : IMAGES_PER_PAGE} 
+                    {this.getText(currentPage, total, offset)} viewed on this page from {total} avaliable.<br/>
                     You are on {currentPage} page of {Math.ceil(this.props.total / IMAGES_PER_PAGE)}.
                 </Typography>
                 <div className={classes.navBarBottom}>

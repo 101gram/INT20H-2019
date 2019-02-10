@@ -6,9 +6,9 @@ import Typography from '@material-ui/core/Typography';
 const styles = ({ spacing }: Theme) => createStyles({
     content: { 
     backgroundColor: "inherit",//palette.background.paper,
-      maxWidth: 600,
+      maxWidth: 650,
       margin: '0 auto',
-      padding: `${spacing.unit * 8}px 0 ${spacing.unit * 6}px`,
+      padding: `${spacing.unit * 8}px 10px ${spacing.unit * 6}px`,
     }
 });
 
@@ -20,10 +20,20 @@ class MainInformation extends React.Component<Props>{
         const { classes } = this.props;
         return( 
             <div className={classes.content}>
-                <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                <Typography 
+                    variant="h1" 
+                    align="center" 
+                    color="textPrimary"
+                >
                     Emotion picker
                 </Typography>
-                <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                <br/>
+                <Typography 
+                    variant="h6" 
+                    align="center" 
+                    color="textSecondary" 
+                    paragraph
+                >
                     Welcome everyone! Our site allows you to get pictures, 
                     which are related to INT20H-2019 from Flickr and to sort
                     them by emotions on people's faces. Have a great fun using it!

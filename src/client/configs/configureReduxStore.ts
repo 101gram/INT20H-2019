@@ -3,11 +3,7 @@ import { PhotosState } from '@actions/fetchPhotos';
 import rootReducer from '@reducers/index';
 import thunk from 'redux-thunk';
 
-// DELETE ON PROD
-const windowIfDefined = typeof window === 'undefined' ? null : window as any;
-const composeEnhancers = windowIfDefined.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const enhancer = composeEnhancers(
+const enhancer = compose(
     applyMiddleware(thunk),
 );
 export interface Action<T = unknown> extends ActionCommon  {

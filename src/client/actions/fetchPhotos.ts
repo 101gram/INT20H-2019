@@ -52,9 +52,9 @@ export function fetchPhotos(page: number, emotions: EP.Emotion[]): PhotosResult<
                     req: {
                         limit: IMAGES_PER_PAGE,
                         offset: (page - 1) * IMAGES_PER_PAGE,
-                        filter: emotions.length ? {
+                        filter: !emotions.length ? null : {
                             include: { emotions }
-                        } : undefined
+                        }
                     }
                 }, 
                 query: QueryPhotos.Document

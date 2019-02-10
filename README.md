@@ -22,7 +22,7 @@ View `EXAMPLE_DOTENV.env` for an example.
 npm run build:prod
 ```
 
-3. Run server.API
+3. Run server.
 
 ```bash
 npm start

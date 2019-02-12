@@ -31,8 +31,8 @@ class Paginator extends React.Component<Props> {
     
     getText(currentPage: number, total: number, offset: number) {
         return (currentPage * IMAGES_PER_PAGE > total && total - offset === 1)
-            ? 'image was'
-            : 'images were';
+            ? ' image was'
+            : ' images were';
 
     }
 

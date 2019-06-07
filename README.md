@@ -16,13 +16,19 @@ This website was made as a test assignment for
 
 View `EXAMPLE_DOTENV.env` for an example.
 
-2. Build project.
+2. Install necessary dependencies
+
+```bash
+npm install
+```
+
+3. Build project.
 
 ```bash
 npm run build:prod
 ```
 
-3. Run server.
+4. Run server.
 
 ```bash
 npm start

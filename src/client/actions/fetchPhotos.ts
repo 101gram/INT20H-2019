@@ -1,6 +1,6 @@
 import { EP } from '@common/interfaces';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { IMAGES_PER_PAGE } from '@components/imageCard/Paginator';
+import { IMAGES_PER_PAGE } from '@components/partials/Paginator';
 import ApolloClient from "apollo-boost";
 import { QueryPhotos } from '@app/graphql';
 

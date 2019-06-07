@@ -42,7 +42,7 @@ const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyl
         [breakpoints.up('sm')]: {
             width: '30%'
         },
-        overflow: "scroll"
+        overflow: "hidden"
     },
     content: {
         flex: '1 0 auto',
@@ -53,7 +53,7 @@ const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyl
         [breakpoints.between('xs', 'sm')]: {
             width: '100%',
             height: '70%'
-          },
+          }, 
         [breakpoints.up('sm')]: {
             width: '70%',
             height: '100%'
@@ -88,6 +88,10 @@ const styles = ({ spacing, palette, shadows, breakpoints }: Theme) => createStyl
     },
     info: {
         flexGrow: 1,
+    },
+    title:{
+        overflow: "hidden",
+        textOverflow: "ellipsis"
     }
 });
 
@@ -113,7 +117,7 @@ class ImageModal extends React.Component<Props>{
     render() {
         const { classes, currentPhoto } = this.props;
 
-        if(currentPhoto == null){
+        if(!currentPhoto){
             return null;
         }
 
@@ -136,15 +140,26 @@ class ImageModal extends React.Component<Props>{
                         <div className={classes.details}>
                             <CardContent className={classes.content}>
                                 <div>    
-                                    <Typography variant="h3" color="default">
+                                    <Typography 
+                                        variant="h3" 
+                                        className={classes.title} 
+                                        title={currentPhoto.title} 
+                                        color="default"
+                                    >
                                         {currentPhoto.title}
                                     </Typography>
-                                    <Typography variant="h6" color="default">
+                                    <Typography 
+                                        variant="h6" 
+                                        color="default"
+                                    >
                                         <strong>Emotions</strong>: {
                                             [...new Set(currentPhoto.emotions)].join(", ")
                                         }
                                     </Typography>
-                                    <Typography variant="h6" color="default">
+                                    <Typography 
+                                        variant="h6" 
+                                        color="default"
+                                    >
                                         <strong>Date</strong>: {
                                             Moment(Date.parse(currentPhoto.datetaken))
                                                 .format('MMMM Do YYYY, h:mm:ss a')

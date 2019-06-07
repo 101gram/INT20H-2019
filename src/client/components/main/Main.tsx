@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 //import { EP } from '@common/interfaces';
-import ImageGridViewer from '@components/imageCard/GridViewer';
-import ImageModal from '@components/imageViewer/ImageModal';
-import MainInformation from '@components/imageViewer/MainInformation';
+import ImageGridViewer from '@components/partials/GridViewer';
+import ImageModal from '@components/partials/ImageModal';
+import MainInformation from '@components/partials/MainInformation';
 import { QueryPhotos } from '@graphql/index';
 
 const styles = ({  spacing }: Theme) => createStyles({

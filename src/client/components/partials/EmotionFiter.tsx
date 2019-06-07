@@ -51,15 +51,9 @@ export interface Props extends WithStyles<typeof styles> {
 }
 
 class EmotionFilter extends React.Component<Props> {
-    state = {
-        selectedEmotions: this.props.currentEmotions
-    };
 
     handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value as unknown;
-        this.setState({
-            selectedEmotions: value
-        });
         this.props.onChangeEmotions(value as string[]);
     }
 
@@ -68,7 +62,7 @@ class EmotionFilter extends React.Component<Props> {
         const arr = selected as string[]; 
         return (
             <div className={classes.chips}>
-                {arr!.map(value => (
+                {arr.map(value => (
                     <Chip key={value} label={value} className={classes.chip} />
                 ))}
             </div>
@@ -98,7 +92,7 @@ class EmotionFilter extends React.Component<Props> {
                             <Select
                                 disabled={this.props.isDisabled}
                                 multiple
-                                value={this.state.selectedEmotions}
+                                value={this.props.currentEmotions}
                                 onChange={this.handleChange}
                                 input={<Input id="select-multiple-chip" />}
                                 renderValue={this.renderSelectValue} 

@@ -102,7 +102,7 @@
     "graphql": "^14.1.1",
     "graphql-iso-date": "^3.6.1",
     "mathjs": "^5.4.2",
-    "mongoose": "^5.4.10",
+    "mongoose": "^5.7.5",
     "mongoose-paginate": "^5.0.3",
     "morgan": "^1.9.1",
     "node-fetch": "^2.3.0",

@@ -105,7 +105,7 @@
     "mongoose": "^5.7.5",
     "mongoose-paginate": "^5.0.3",
     "morgan": "^1.9.1",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.1",
     "typescript-collections": "^1.3.2",
     "vee-type-safe": "^3.2.0"
   }

@@ -57,7 +57,7 @@
     "awesome-typescript-loader": "^5.2.1",
     "classnames": "^2.2.6",
     "css-loader": "^1.0.1",
-    "graphql-code-generator": "^0.16.1",
+    "graphql-code-generator": "^0.18.2",
     "graphql-codegen-add": "^0.16.1",
     "graphql-codegen-typescript-client": "^0.16.1",
     "graphql-codegen-typescript-common": "^0.16.1",
